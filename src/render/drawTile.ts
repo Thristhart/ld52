@@ -9,8 +9,11 @@ const seasonTilesSheet: SpriteSheet = {
 };
 
 export const PathTile = [[12, 8]] as const;
+export const PathTop = [[9, 8]] as const;
+export const PathBottom = [[8, 7]] as const;
 export const PathLeft = [[7, 8]] as const;
 export const PathRight = [[10, 7]] as const;
+export const PathTopLeft = [[11, 8]] as const;
 export const BasicTile = [[12, 2]] as const;
 
 export const tileSize = 16;

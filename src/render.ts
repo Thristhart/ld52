@@ -26,7 +26,7 @@ export const animationFrame = async (timestamp: number) => {
         }
     }
 
-    drawEnemy(context, 100, 100, EnemyType.Slime, timestamp, Direction.Up);
+    drawEnemy(context, 100, 100, EnemyType.Slime, timestamp, Direction.Right);
 
     context.restore();
 
