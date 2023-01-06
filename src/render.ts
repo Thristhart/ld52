@@ -1,4 +1,5 @@
-import { getGameState } from "~/gameWorkerWrapper";
+import { Season } from "./models/season";
+import { BasicTile, drawTile } from "./render/drawTile";
 
 export const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
@@ -8,11 +9,16 @@ if (!context) {
 
 let frameHandle: number;
 export const animationFrame = async (_timestamp: number) => {
-    const state = await getGameState();
+    //const state = await getGameState();
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    context.font = "bold 48px serif";
-    context.fillText(`Click count: ${state.counterValue.toString()}`, 10, 60);
+
+    context.save();
+
+    context.imageSmoothingEnabled = false;
+    drawTile(context, BasicTile, 0, 0, Season.Summer);
+
+    context.restore();
 
     frameHandle = requestAnimationFrame(animationFrame);
 };
