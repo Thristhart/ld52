@@ -1,6 +1,6 @@
-import { levelHeight, levelWidth } from "./models/level";
-import { Season } from "./models/season";
-import { BasicTile, drawTile } from "./render/drawTile";
+import { getGameState } from "./gameWorkerWrapper";
+import { levelData, levelHeight, levelWidth } from "./models/level";
+import { drawTiles, tileSize } from "./render/drawTile";
 
 export const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
@@ -10,16 +10,16 @@ if (!context) {
 
 let frameHandle: number;
 export const animationFrame = async (_timestamp: number) => {
-    //const state = await getGameState();
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const state = await getGameState();
+    canvas.width = tileSize * levelWidth;
+    canvas.height = tileSize * levelHeight;
 
     context.save();
 
     context.imageSmoothingEnabled = false;
     for (let x = 0; x < levelWidth; x++) {
         for (let y = 0; y < levelHeight; y++) {
-            drawTile(context, BasicTile, x, y, Season.Summer);
+            drawTiles(context, levelData[y][x], x, y, state.season);
         }
     }
 

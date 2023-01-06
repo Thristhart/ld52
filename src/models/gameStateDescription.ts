@@ -1,5 +1,6 @@
 import BufferBackedObject from "buffer-backed-object";
 
 export const GameStateDescription = {
-    counterValue: BufferBackedObject.Int32(),
+    gametime: BufferBackedObject.Uint32(),
+    season: BufferBackedObject.Uint8(),
 };
