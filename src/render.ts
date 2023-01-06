@@ -1,3 +1,4 @@
+import { levelHeight, levelWidth } from "./models/level";
 import { Season } from "./models/season";
 import { BasicTile, drawTile } from "./render/drawTile";
 
@@ -16,7 +17,11 @@ export const animationFrame = async (_timestamp: number) => {
     context.save();
 
     context.imageSmoothingEnabled = false;
-    drawTile(context, BasicTile, 0, 0, Season.Summer);
+    for (let x = 0; x < levelWidth; x++) {
+        for (let y = 0; y < levelHeight; y++) {
+            drawTile(context, BasicTile, x, y, Season.Summer);
+        }
+    }
 
     context.restore();
 

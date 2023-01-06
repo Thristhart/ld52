@@ -24,8 +24,8 @@ export function drawTile(
         tile[1] * tileSize,
         tileSize,
         tileSize,
-        x,
-        y,
+        x * tileSize,
+        y * tileSize,
         tileSize,
         tileSize
     );
