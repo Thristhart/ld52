@@ -11,7 +11,8 @@ export const animationFrame = async (_timestamp: number) => {
     const state = await getGameState();
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    context.fillText(`Click count: ${state.counterValue.toString()}`, 10, 10);
+    context.font = "bold 48px serif";
+    context.fillText(`Click count: ${state.counterValue.toString()}`, 10, 60);
 
     frameHandle = requestAnimationFrame(animationFrame);
 };
