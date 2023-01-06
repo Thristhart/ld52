@@ -10,7 +10,7 @@ let frameHandle: number;
 export const animationFrame = async (_timestamp: number) => {
     const state = await getGameState();
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillText(state.counterValue.toString(), 10, 10);
+    context.fillText(`Click count: ${state.counterValue.toString()}`, 10, 10);
 
     frameHandle = requestAnimationFrame(animationFrame);
 };
