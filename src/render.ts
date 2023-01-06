@@ -1,5 +1,8 @@
 import { getGameState } from "./gameWorkerWrapper";
+import { Direction } from "./models/direction";
+import { EnemyType } from "./models/enemies";
 import { levelData, levelHeight, levelWidth } from "./models/level";
+import { drawEnemy } from "./render/drawEnemies";
 import { drawTiles, tileSize } from "./render/drawTile";
 
 export const canvas = document.querySelector("canvas") as HTMLCanvasElement;
@@ -9,7 +12,7 @@ if (!context) {
 }
 
 let frameHandle: number;
-export const animationFrame = async (_timestamp: number) => {
+export const animationFrame = async (timestamp: number) => {
     const state = await getGameState();
     canvas.width = tileSize * levelWidth;
     canvas.height = tileSize * levelHeight;
@@ -22,6 +25,8 @@ export const animationFrame = async (_timestamp: number) => {
             drawTiles(context, levelData[y][x], x, y, state.season);
         }
     }
+
+    drawEnemy(context, 100, 100, EnemyType.Slime, timestamp, Direction.Up);
 
     context.restore();
 

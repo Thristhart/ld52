@@ -1,8 +1,12 @@
 import seasonTilesPath from "~/assets/images/seasonal_tiles.png";
 import { Season } from "~/models/season";
+import { drawSprite, SpriteSheet } from "./drawSprite";
+import { loadImage } from "./loadImage";
 
-const seasonTiles = new Image();
-seasonTiles.src = seasonTilesPath;
+const seasonTilesSheet: SpriteSheet = {
+    image: loadImage(seasonTilesPath),
+    spriteSize: 16,
+};
 
 export const PathTile = [[12, 8]] as const;
 export const PathLeft = [[7, 8]] as const;
@@ -21,16 +25,6 @@ export function drawTiles(
     season: Season
 ) {
     for (const tile of tiles) {
-        context.drawImage(
-            seasonTiles,
-            (season * seasonSize + tile[0]) * tileSize,
-            tile[1] * tileSize,
-            tileSize,
-            tileSize,
-            x * tileSize,
-            y * tileSize,
-            tileSize,
-            tileSize
-        );
+        drawSprite(context, seasonTilesSheet, x * tileSize, y * tileSize, [season * seasonSize + tile[0], tile[1]]);
     }
 }
