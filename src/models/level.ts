@@ -34,5 +34,8 @@ export const getTileAtPosition = (x: number, y: number) => {
 export function isTilePathable(x: number, y: number) {
     return (getTileAtPosition(x, y) ?? 1) === 1;
 }
+export function isTileAllowedTower(x: number, y: number) {
+    return getTileAtPosition(x, y) === 2;
+}
 
 export const tileSize = 16;

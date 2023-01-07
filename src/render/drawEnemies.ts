@@ -6,7 +6,8 @@ import { loadImage } from "./loadImage";
 
 const slimeSheet: SpriteSheet = {
     image: loadImage(slimeSheetPath),
-    spriteSize: 16,
+    spriteWidth: 16,
+    spriteHeight: 16,
 };
 const slimeWalkFrameDuration = 100;
 const slimeWalkFrameCount = 5;

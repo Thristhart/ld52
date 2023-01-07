@@ -6,7 +6,6 @@ const enemySpeed = 1;
 const enemyDamage = 1;
 
 // TODO: weight pathfinding by nearby towers
-// TODO: display every enemy's path
 
 export const enemyThink = async (gameState: GameState, entId: number, enemy: EnemyState) => {
     const path = enemy.path;
