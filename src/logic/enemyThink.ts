@@ -1,31 +1,37 @@
-import { EnemyState, GameState } from "~/models/gameStateDescription";
+import { EnemyState, GameState, PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint } from "~/models/level";
-import { pathToPoint, Point } from "./pathfinding";
-
-const PathfindingCache: Array<Array<Point>> = [];
+import { pathToPoint } from "./pathfinding";
 
 const enemySpeed = 1;
 
-export const enemyThink = async (gameState: GameState, entId: number, enemy: EnemyState) => {
-    const path = PathfindingCache[entId] ?? pathToPoint(enemy, defendPoint);
-    if (path) {
-        const nextTarget = path[0];
-        if (!nextTarget) {
-            console.log("finished path");
-            gameState.enemies[entId].type = 0;
-            delete PathfindingCache[entId];
-            return;
-        }
-        const dx = nextTarget.x - enemy.x;
-        const dy = nextTarget.y - enemy.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+// TODO: weight pathfinding by nearby towers
+// TODO: display every enemy's path
 
-        if (distance < enemySpeed * 1.2) {
-            path.shift();
-        } else {
-            enemy.x += (dx / distance) * enemySpeed;
-            enemy.y += (dy / distance) * enemySpeed;
+export const enemyThink = async (gameState: GameState, entId: number, enemy: EnemyState) => {
+    const path = enemy.path;
+    if (path[0].type === PathNodeType.Empty) {
+        const newPath = pathToPoint(enemy, defendPoint);
+        for (let i = 0; i < newPath.length; i++) {
+            path[i].type = PathNodeType.Upcoming;
+            path[i].x = newPath[i].x;
+            path[i].y = newPath[i].y;
         }
     }
-    PathfindingCache[entId] = path;
+    const nextTarget = path[0];
+    if (!nextTarget) {
+        console.log("finished path");
+        gameState.enemies[entId].type = 0;
+        path[0].type = PathNodeType.Empty;
+        return;
+    }
+    const dx = nextTarget.x - enemy.x;
+    const dy = nextTarget.y - enemy.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance < enemySpeed * 1.2) {
+        path.shift();
+    } else {
+        enemy.x += (dx / distance) * enemySpeed;
+        enemy.y += (dy / distance) * enemySpeed;
+    }
 };

@@ -12,3 +12,5 @@ if (import.meta.hot) {
         canvas.removeEventListener("click", onClick);
     });
 }
+
+// TODO: hover over grids and place towers

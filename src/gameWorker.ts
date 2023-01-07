@@ -1,4 +1,4 @@
-import BufferBackedObject, { structSize } from "buffer-backed-object";
+import BufferBackedObject, { structSize } from "buffer-backed-object/buffer-backed-object";
 import { GameStateDescription } from "~/models/gameStateDescription";
 import { enemyThink } from "./logic/enemyThink";
 import { EnemyType } from "./models/enemies";
@@ -53,3 +53,6 @@ function setup() {
 }
 
 setup();
+
+// TODO: spawn enemies regularly
+// TODO: enemies do damage when they reach the end

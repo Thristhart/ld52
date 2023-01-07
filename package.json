@@ -14,7 +14,7 @@
         "vite-plugin-comlink": "^3.0.5"
     },
     "dependencies": {
-        "buffer-backed-object": "^0.3.1",
+        "buffer-backed-object": "github:Thristhart/buffer-backed-object",
         "comlink": "^4.3.1",
         "heap-js": "^2.2.0"
     }
