@@ -1,7 +1,7 @@
 import Heap from "heap-js";
 import { isTilePathable, levelHeight, levelWidth, tileSize } from "~/models/level";
 
-interface Point {
+export interface Point {
     x: number;
     y: number;
 }
@@ -18,17 +18,17 @@ function getNodeAtPoint(point: Point): Node {
 }
 
 function calculateNodeHeuristic(a: Node, endPosition: Node) {
-    const dx = endPosition.x - a.x;
-    const dy = endPosition.y - a.y;
+    const dx = Math.abs(endPosition.x - a.x);
+    const dy = Math.abs(endPosition.y - a.y);
     a.heuristic = dx + dy;
     return a.heuristic;
 }
 
 function compareNodeHeuristics(to: Node, a: Node, b: Node) {
-    const bHeuristic = b.heuristic ?? calculateNodeHeuristic(b, to);
     const aHeuristic = a.heuristic ?? calculateNodeHeuristic(a, to);
+    const bHeuristic = b.heuristic ?? calculateNodeHeuristic(b, to);
 
-    return bHeuristic + getCheapestKnownScoreForNode(b) - (aHeuristic + getCheapestKnownScoreForNode(a));
+    return aHeuristic + getCheapestKnownScoreForNode(a) - (bHeuristic + getCheapestKnownScoreForNode(b));
 }
 
 function backtrack(node: Node) {
@@ -117,7 +117,7 @@ export function pathToPoint(from: Point, to: Point) {
     open.push(startNode);
 
     for (const currentNode of open) {
-        if (currentNode === endNode) {
+        if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
             return backtrack(currentNode);
         }
 
@@ -130,7 +130,7 @@ export function pathToPoint(from: Point, to: Point) {
             if (scoreForNeighbor < getCheapestKnownScoreForNode(neighbor)) {
                 neighbor.cheapestKnownPathScore = scoreForNeighbor;
                 neighbor.parent = currentNode;
-                if (!open.contains(neighbor)) {
+                if (!open.contains(neighbor, (a, b) => a.x === b.x && a.y === b.y)) {
                     open.push(neighbor);
                 }
             }

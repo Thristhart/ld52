@@ -16,8 +16,8 @@ export function drawSprite(
         frame[1] * sheet.spriteSize,
         sheet.spriteSize,
         sheet.spriteSize,
-        x,
-        y,
+        x - sheet.spriteSize / 2,
+        y - sheet.spriteSize / 2,
         sheet.spriteSize,
         sheet.spriteSize
     );

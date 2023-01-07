@@ -1,6 +1,8 @@
 import BufferBackedObject, { structSize } from "buffer-backed-object";
 import { GameStateDescription } from "~/models/gameStateDescription";
+import { enemyThink } from "./logic/enemyThink";
 import { EnemyType } from "./models/enemies";
+import { spawnPoint } from "./models/level";
 import { nextSeason } from "./models/season";
 
 export const gameStateBuffer = new ArrayBuffer(structSize(GameStateDescription));
@@ -10,7 +12,7 @@ export const onClick = () => {
     gameState.season = nextSeason(gameState.season);
 };
 
-const millisecondsPerTick = 64;
+const millisecondsPerTick = 16;
 
 let lastTickTime = performance.now();
 function tick() {
@@ -25,7 +27,13 @@ function tick() {
 }
 
 function doGameLogic() {
-    // console.log(gameState.enemies[0].x);
+    for (let i = 0; i < gameState.enemies.length; i++) {
+        const enemy = gameState.enemies[i];
+        if (!enemy.type) {
+            continue;
+        }
+        enemyThink(i, enemy);
+    }
 }
 
 function addEnemy(type: EnemyType, x: number, y: number) {
@@ -40,7 +48,7 @@ function addEnemy(type: EnemyType, x: number, y: number) {
 }
 
 function setup() {
-    addEnemy(EnemyType.Slime, 30, 30);
+    addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
     tick();
 }
 
