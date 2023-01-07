@@ -1,8 +1,7 @@
 import { getGameState } from "~/gameWorkerWrapper";
 import { Direction } from "~/models/direction";
-import { levelBackgrounds, levelHeight, levelWidth } from "~/models/level";
+import { levelBackgrounds, levelHeight, levelWidth, tileSize } from "~/models/level";
 import { drawEnemy } from "./drawEnemies";
-import { tileSize } from "./drawTile";
 
 export const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");

@@ -26,3 +26,5 @@ export const levelHeight = layer.__cHei;
 export function isTilePathable(x: number, y: number) {
     return getTileAtPosition(x, y) === 1;
 }
+
+export const tileSize = 16;
