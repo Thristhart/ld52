@@ -1,8 +1,8 @@
 import { getGameState } from "~/gameWorkerWrapper";
 import { Direction } from "~/models/direction";
-import { levelData, levelHeight, levelWidth } from "~/models/level";
+import { levelBackground, levelHeight, levelWidth } from "~/models/level";
 import { drawEnemy } from "./drawEnemies";
-import { drawTiles, tileSize } from "./drawTile";
+import { tileSize } from "./drawTile";
 
 export const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
@@ -19,11 +19,7 @@ export const animationFrame = async (timestamp: number) => {
     context.save();
 
     context.imageSmoothingEnabled = false;
-    for (let x = 0; x < levelWidth; x++) {
-        for (let y = 0; y < levelHeight; y++) {
-            drawTiles(context, levelData[y][x], x, y, state.season);
-        }
-    }
+    context.drawImage(levelBackground, 0, 0);
 
     state.enemies.forEach((enemy) => {
         drawEnemy(context, enemy.x, enemy.y, enemy.type, timestamp, Direction.Right);

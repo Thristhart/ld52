@@ -1,55 +1,20 @@
-import { BasicTile, PathBottom, PathLeft, PathRight, PathTile, PathTop, PathTopLeft } from "~/render/drawTile";
+import ldtkData from "~/assets/ldtk/testLevel.json";
+import levelBackgroundPath from "~/assets/ldtk/testLevel/png/Level_0__MapData.png";
+import { loadImage } from "~/render/loadImage";
 
-export const levelData = `
-00000000[1]000000000
-000_____.1]000000000
-00[11111111111111]00
-0001----[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-00010000[1]000000000
-0001111111]000000000
-00000000[1]000000000
-00000000[1]000000000
-00000000[1]000000000
-`
-    .trim()
-    .split("\n")
-    .map((line) =>
-        line.split("").map((digit) => {
-            switch (digit) {
-                case "0":
-                    return BasicTile;
-                case "1":
-                    return PathTile;
-                case "[":
-                    return PathLeft;
-                case "]":
-                    return PathRight;
-                case ".":
-                    return PathTopLeft;
-                case "_":
-                    return PathTop;
-                case "-":
-                    return PathBottom;
-                default:
-                    return BasicTile;
-            }
-        })
-    );
+const level = ldtkData.levels[0];
+const layer = level.layerInstances[0];
+const levelData = layer.intGridCsv;
 
-export const levelHeight = levelData.length;
-export const levelWidth = levelData[0].length;
+function getTileAtPosition(x: number, y: number) {
+    return levelData[x * layer.__cWid + y * layer.__cHei];
+}
+
+export const levelBackground = loadImage(levelBackgroundPath);
+
+export const levelWidth = layer.__cWid;
+export const levelHeight = layer.__cHei;
 
 export function isTilePathable(x: number, y: number) {
-    return levelData[y][x] === PathTile;
+    return getTileAtPosition(x, y) === 1;
 }
