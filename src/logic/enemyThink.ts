@@ -17,19 +17,20 @@ export const enemyThink = async (gameState: GameState, entId: number, enemy: Ene
             path[i].y = newPath[i].y;
         }
     }
-    const nextTarget = path[0];
-    if (!nextTarget) {
+    const nextTargetIndex = path.findIndex((item) => item.type === PathNodeType.Upcoming);
+    if (nextTargetIndex == -1) {
         console.log("finished path");
         gameState.enemies[entId].type = 0;
         path[0].type = PathNodeType.Empty;
         return;
     }
+    const nextTarget = path[nextTargetIndex];
     const dx = nextTarget.x - enemy.x;
     const dy = nextTarget.y - enemy.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance < enemySpeed * 1.2) {
-        path.shift();
+        path[nextTargetIndex].type = PathNodeType.Visited;
     } else {
         enemy.x += (dx / distance) * enemySpeed;
         enemy.y += (dy / distance) * enemySpeed;

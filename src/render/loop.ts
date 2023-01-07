@@ -1,6 +1,7 @@
 import hutSheetPath from "~/assets/images/defendPoint.png";
 import { getGameState } from "~/gameWorkerWrapper";
 import { Direction } from "~/models/direction";
+import { PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint, levelHeight, levelWidth, tileSize } from "~/models/level";
 import { Season } from "~/models/season";
 import { drawEnemy } from "./drawEnemies";
@@ -42,6 +43,23 @@ export const animationFrame = async (timestamp: number) => {
 
     context.imageSmoothingEnabled = false;
     context.drawImage(levelBackgrounds[state.season], 0, 0);
+
+    state.enemies.forEach((enemy) => {
+        if (enemy.path[0].type === PathNodeType.Empty) {
+            return;
+        }
+        context.beginPath();
+        context.moveTo(enemy.x, enemy.y);
+        for (const pathNode of enemy.path) {
+            if (pathNode.type === PathNodeType.Empty) {
+                break;
+            }
+            if (pathNode.type === PathNodeType.Upcoming) {
+                context.lineTo(pathNode.x, pathNode.y);
+            }
+        }
+        context.stroke();
+    });
 
     drawSprite(context, hutSheet, defendPoint.x, defendPoint.y - hutSheet.spriteSize / 2 + 6, [
         getHutVersion(state.season),

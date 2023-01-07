@@ -52,11 +52,14 @@ interface Node {
     cheapestKnownPathScore?: number;
 }
 
-function makeNodeAt(x: number, y: number, parent: Node): Node {
+function makeNodeAt(nodemap: Map<string, Node>, x: number, y: number): Node {
+    const existing = nodemap.get(`${x},${y}`);
+    if (existing) {
+        return existing;
+    }
     return {
         x,
         y,
-        parent,
         point: {
             x: x * tileSize + tileSize / 2,
             y: y * tileSize + tileSize / 2,
@@ -64,31 +67,31 @@ function makeNodeAt(x: number, y: number, parent: Node): Node {
     };
 }
 
-function getNeighbors(node: Node) {
+function getNeighbors(nodeMap: Map<string, Node>, node: Node) {
     const neighbors: Node[] = [];
 
     if (node.y > 0) {
         if (node.x > 0) {
-            neighbors.push(makeNodeAt(node.x - 1, node.y - 1, node));
+            neighbors.push(makeNodeAt(nodeMap, node.x - 1, node.y - 1));
         }
-        neighbors.push(makeNodeAt(node.x, node.y - 1, node));
+        neighbors.push(makeNodeAt(nodeMap, node.x, node.y - 1));
         if (node.x < levelWidth) {
-            neighbors.push(makeNodeAt(node.x + 1, node.y - 1, node));
+            neighbors.push(makeNodeAt(nodeMap, node.x + 1, node.y - 1));
         }
     }
     if (node.x > 0) {
-        neighbors.push(makeNodeAt(node.x - 1, node.y, node));
+        neighbors.push(makeNodeAt(nodeMap, node.x - 1, node.y));
     }
     if (node.x < levelWidth) {
-        neighbors.push(makeNodeAt(node.x + 1, node.y, node));
+        neighbors.push(makeNodeAt(nodeMap, node.x + 1, node.y));
     }
     if (node.y < levelHeight) {
         if (node.x > 0) {
-            neighbors.push(makeNodeAt(node.x - 1, node.y + 1, node));
+            neighbors.push(makeNodeAt(nodeMap, node.x - 1, node.y + 1));
         }
-        neighbors.push(makeNodeAt(node.x, node.y + 1, node));
+        neighbors.push(makeNodeAt(nodeMap, node.x, node.y + 1));
         if (node.x < levelWidth) {
-            neighbors.push(makeNodeAt(node.x + 1, node.y + 1, node));
+            neighbors.push(makeNodeAt(nodeMap, node.x + 1, node.y + 1));
         }
     }
 
@@ -112,6 +115,10 @@ export function pathToPoint(from: Point, to: Point) {
         return [];
     }
 
+    const nodeMap = new Map<string, Node>();
+    nodeMap.set(`${startNode.x},${startNode.y}`, startNode);
+    nodeMap.set(`${endNode.x},${endNode.y}`, endNode);
+
     startNode.cheapestKnownPathScore = 0;
 
     open.push(startNode);
@@ -121,13 +128,14 @@ export function pathToPoint(from: Point, to: Point) {
             return backtrack(currentNode);
         }
 
-        const neighbors = getNeighbors(currentNode);
+        const neighbors = getNeighbors(nodeMap, currentNode);
         for (const neighbor of neighbors) {
             if (!isTilePathable(neighbor.x, neighbor.y)) {
                 continue;
             }
             // Diagonals should cost more
-            const weight = neighbor.x !== currentNode.x || neighbor.y! == currentNode.y ? 1 : 1.41421;
+            const isDiagonal = currentNode.x !== neighbor.x && currentNode.y !== neighbor.y;
+            const weight = isDiagonal ? 2.41421 : 1;
 
             const scoreForNeighbor = getCheapestKnownScoreForNode(currentNode) + weight;
             if (scoreForNeighbor < getCheapestKnownScoreForNode(neighbor)) {
