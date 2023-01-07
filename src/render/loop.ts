@@ -1,6 +1,6 @@
 import { getGameState } from "~/gameWorkerWrapper";
 import { Direction } from "~/models/direction";
-import { levelBackground, levelHeight, levelWidth } from "~/models/level";
+import { levelBackgrounds, levelHeight, levelWidth } from "~/models/level";
 import { drawEnemy } from "./drawEnemies";
 import { tileSize } from "./drawTile";
 
@@ -19,7 +19,7 @@ export const animationFrame = async (timestamp: number) => {
     context.save();
 
     context.imageSmoothingEnabled = false;
-    context.drawImage(levelBackground, 0, 0);
+    context.drawImage(levelBackgrounds[state.season], 0, 0);
 
     state.enemies.forEach((enemy) => {
         drawEnemy(context, enemy.x, enemy.y, enemy.type, timestamp, Direction.Right);
