@@ -12,6 +12,7 @@ Does each season have a specific intro effect? (Winter creating snowdrifts, Summ
 “Those are stretch goals”
 Animated seasonal overlays.
 Seasonal crossfade?
+Single enemy selection.
 
 # enemies
 
@@ -19,7 +20,7 @@ Seasonal crossfade?
 
 -   basic enemy, 10 hp, moves at 1 tile per 4 seconds.
 
-# towers
+# towers (Placing restrictions: Nothing on a 2 wide? Basic is 3, some of them are larger?)
 
 ## Fuck how do we not just use PvZ templating?
 
@@ -38,3 +39,5 @@ Seasonal crossfade?
 -   Cost?
 -   Harvest worth?
 -
+
+# Economic Towers?
