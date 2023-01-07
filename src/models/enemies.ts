@@ -1,3 +1,4 @@
 export enum EnemyType {
-    Slime = 0,
+    None = 0,
+    Slime = 1,
 }

@@ -49,3 +49,7 @@ export const levelData = `
 
 export const levelHeight = levelData.length;
 export const levelWidth = levelData[0].length;
+
+export function isTilePathable(x: number, y: number) {
+    return levelData[y][x] === PathTile;
+}

@@ -1,9 +1,8 @@
-import { getGameState } from "./gameWorkerWrapper";
-import { Direction } from "./models/direction";
-import { EnemyType } from "./models/enemies";
-import { levelData, levelHeight, levelWidth } from "./models/level";
-import { drawEnemy } from "./render/drawEnemies";
-import { drawTiles, tileSize } from "./render/drawTile";
+import { getGameState } from "~/gameWorkerWrapper";
+import { Direction } from "~/models/direction";
+import { levelData, levelHeight, levelWidth } from "~/models/level";
+import { drawEnemy } from "./drawEnemies";
+import { drawTiles, tileSize } from "./drawTile";
 
 export const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
@@ -26,14 +25,16 @@ export const animationFrame = async (timestamp: number) => {
         }
     }
 
-    drawEnemy(context, 100, 100, EnemyType.Slime, timestamp, Direction.Right);
+    state.enemies.forEach((enemy) => {
+        drawEnemy(context, enemy.x, enemy.y, enemy.type, timestamp, Direction.Right);
+    });
 
     context.restore();
 
     frameHandle = requestAnimationFrame(animationFrame);
 };
 
-export const setupRender = () => {
+export const startLoop = () => {
     frameHandle = requestAnimationFrame(animationFrame);
 };
 

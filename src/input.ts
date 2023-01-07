@@ -1,5 +1,5 @@
 import { gameWorker } from "~/gameWorkerWrapper";
-import { canvas } from "~/render";
+import { canvas } from "~/render/loop";
 
 function onClick() {
     gameWorker.onClick();

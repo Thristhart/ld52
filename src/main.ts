@@ -1,5 +1,5 @@
 import "~/input";
-import { setupRender } from "~/render";
 import "~/style.css";
+import { startLoop } from "./render/loop";
 
-setupRender();
+startLoop();
