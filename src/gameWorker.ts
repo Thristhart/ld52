@@ -50,6 +50,7 @@ function addEnemy(type: EnemyType, x: number, y: number) {
 function setup() {
     addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
     tick();
+    gameState.playerHealth = 100;
 }
 
 setup();

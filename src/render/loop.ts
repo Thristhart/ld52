@@ -70,6 +70,8 @@ export const animationFrame = async (timestamp: number) => {
         drawEnemy(context, enemy.x, enemy.y, enemy.type, timestamp, Direction.Right);
     });
 
+    context.fillText("Health: " + state.playerHealth, canvas.width - 60, 10);
+
     context.restore();
 
     frameHandle = requestAnimationFrame(animationFrame);

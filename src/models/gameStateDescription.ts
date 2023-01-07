@@ -23,6 +23,7 @@ export const GameStateDescription = {
     gametime: BufferBackedObject.Uint32(),
     season: BufferBackedObject.Uint8(),
     enemies: BufferBackedObject.NestedArrayOfBufferBackedObjects(1024, EnemyDescription),
+    playerHealth: BufferBackedObject.Uint32(),
 };
 
 export type GameState = DecodedBuffer<typeof GameStateDescription>;

@@ -3,6 +3,7 @@ import { defendPoint } from "~/models/level";
 import { pathToPoint } from "./pathfinding";
 
 const enemySpeed = 1;
+const enemyDamage = 1;
 
 // TODO: weight pathfinding by nearby towers
 // TODO: display every enemy's path
@@ -20,6 +21,8 @@ export const enemyThink = async (gameState: GameState, entId: number, enemy: Ene
     const nextTargetIndex = path.findIndex((item) => item.type === PathNodeType.Upcoming);
     if (nextTargetIndex == -1) {
         console.log("finished path");
+        gameState.playerHealth -= enemyDamage;
+        console.log("Health Down: ", gameState.playerHealth);
         gameState.enemies[entId].type = 0;
         path[0].type = PathNodeType.Empty;
         return;
@@ -27,7 +30,7 @@ export const enemyThink = async (gameState: GameState, entId: number, enemy: Ene
     const nextTarget = path[nextTargetIndex];
     const dx = nextTarget.x - enemy.x;
     const dy = nextTarget.y - enemy.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    const distance = distanceFromDistances(dx, dy);
 
     if (distance < enemySpeed * 1.2) {
         path[nextTargetIndex].type = PathNodeType.Visited;
@@ -36,3 +39,7 @@ export const enemyThink = async (gameState: GameState, entId: number, enemy: Ene
         enemy.y += (dy / distance) * enemySpeed;
     }
 };
+
+function distanceFromDistances(dx: number, dy: number) {
+    return Math.sqrt(dx * dx + dy * dy);
+}
