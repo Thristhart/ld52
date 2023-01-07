@@ -15,24 +15,24 @@ export const onClick = () => {
 const millisecondsPerTick = 16;
 
 let lastTickTime = performance.now();
-function tick() {
+async function tick() {
     const now = performance.now();
     let dt = now - lastTickTime;
     while (dt > millisecondsPerTick) {
         lastTickTime = now;
-        doGameLogic();
+        await doGameLogic();
         dt -= millisecondsPerTick;
     }
     setTimeout(tick, millisecondsPerTick - dt);
 }
 
-function doGameLogic() {
+async function doGameLogic() {
     for (let i = 0; i < gameState.enemies.length; i++) {
         const enemy = gameState.enemies[i];
         if (!enemy.type) {
             continue;
         }
-        enemyThink(i, enemy);
+        await enemyThink(gameState, i, enemy);
     }
 }
 

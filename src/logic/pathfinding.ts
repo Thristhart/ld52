@@ -11,7 +11,7 @@ function getNodeAtPoint(point: Point): Node {
     const y = Math.floor(point.y / tileSize);
 
     return {
-        point: { x: x * tileSize, y: y * tileSize },
+        point: { x: x * tileSize + tileSize / 2, y: y * tileSize + tileSize / 2 },
         x,
         y,
     };
@@ -58,8 +58,8 @@ function makeNodeAt(x: number, y: number, parent: Node): Node {
         y,
         parent,
         point: {
-            x: x * tileSize,
-            y: y * tileSize,
+            x: x * tileSize + tileSize / 2,
+            y: y * tileSize + tileSize / 2,
         },
     };
 }
@@ -123,6 +123,9 @@ export function pathToPoint(from: Point, to: Point) {
 
         const neighbors = getNeighbors(currentNode);
         for (const neighbor of neighbors) {
+            if (!isTilePathable(neighbor.x, neighbor.y)) {
+                continue;
+            }
             // Diagonals should cost more
             const weight = neighbor.x !== currentNode.x || neighbor.y! == currentNode.y ? 1 : 1.41421;
 

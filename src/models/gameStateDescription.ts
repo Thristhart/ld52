@@ -2,8 +2,8 @@ import BufferBackedObject, { DecodedBuffer } from "buffer-backed-object";
 
 export const EnemyDescription = {
     type: BufferBackedObject.Uint8(),
-    x: BufferBackedObject.Int16(),
-    y: BufferBackedObject.Int16(),
+    x: BufferBackedObject.Float32(),
+    y: BufferBackedObject.Float32(),
 };
 
 export const GameStateDescription = {

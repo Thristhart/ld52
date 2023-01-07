@@ -28,11 +28,11 @@ export const levelWidth = mapData.__cWid;
 export const levelHeight = mapData.__cHei;
 
 export const getTileAtPosition = (x: number, y: number) => {
-    return levelData[x * levelWidth + y];
+    return levelData[y * levelWidth + x];
 };
 
 export function isTilePathable(x: number, y: number) {
-    return getTileAtPosition(x, y) === 2;
+    return (getTileAtPosition(x, y) ?? 1) === 1;
 }
 
 export const tileSize = 16;
