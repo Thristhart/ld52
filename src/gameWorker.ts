@@ -34,6 +34,10 @@ async function tick() {
     setTimeout(tick, millisecondsPerTick - dt);
 }
 
+let lastEnemyTime = 0;
+
+const timePerEnemy = 500;
+
 async function doGameLogic(timestamp: number) {
     for (let i = 0; i < gameState.enemies.length; i++) {
         const enemy = gameState.enemies[i];
@@ -49,6 +53,11 @@ async function doGameLogic(timestamp: number) {
         }
         await towerThink(gameState, i, tower, timestamp);
     }
+
+    if (timestamp - lastEnemyTime > timePerEnemy) {
+        addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
+        lastEnemyTime = timestamp;
+    }
 }
 
 function addEnemy(type: EnemyType, x: number, y: number) {
@@ -63,6 +72,7 @@ function addEnemy(type: EnemyType, x: number, y: number) {
 }
 
 function setup() {
+    lastEnemyTime = performance.now();
     addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
     tick();
     gameState.playerHealth = 100;
@@ -71,4 +81,3 @@ function setup() {
 setup();
 
 // TODO: spawn enemies regularly
-// TODO: enemies do damage when they reach the end

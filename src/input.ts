@@ -96,5 +96,3 @@ if (import.meta.hot) {
         canvas.removeEventListener("mouseleave", onMouseLeave);
     });
 }
-
-// TODO: hover over grids and place towers
