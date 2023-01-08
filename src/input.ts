@@ -4,7 +4,9 @@ import { isTileAllowedTower, tileSize } from "./models/level";
 import { TowerType } from "./models/towers";
 
 function onClick() {
-    if (towerHoverPosition) {
+    if (selectedTowerInfo.hoveredTower) {
+        selectedTowerInfo.inspectingTower = selectedTowerInfo.hoveredTower;
+    } else if (towerHoverPosition) {
         gameWorker.placeTower(selectedTowerInfo.selectedTower, towerHoverPosition.x, towerHoverPosition.y);
     }
 }
@@ -14,8 +16,14 @@ export const mouseGridPosition = { x: 0, y: 0 };
 export let isHovering = false;
 export let towerHoverPosition: { x: number; y: number } | undefined;
 
-export const selectedTowerInfo = {
+export const selectedTowerInfo: {
+    selectedTower: TowerType;
+    hoveredTower: number | undefined;
+    inspectingTower: number | undefined;
+} = {
     selectedTower: TowerType.None,
+    hoveredTower: undefined,
+    inspectingTower: undefined,
 };
 
 function onKeyDown(e: KeyboardEvent) {
@@ -32,21 +40,30 @@ function onMouseMove(e: MouseEvent) {
     mousePosition.y = y;
     mouseGridPosition.x = Math.floor(x / tileSize);
     mouseGridPosition.y = Math.floor(y / tileSize);
+
+    selectedTowerInfo.hoveredTower = overlapsWithTower(mouseGridPosition.x, mouseGridPosition.y);
+
     findValidLocationForTower();
     isHovering = true;
+}
+
+function overlapsWithTower(gridX: number, gridY: number) {
+    if (!lastGameState) {
+        return undefined;
+    }
+    for (const tower of lastGameState.towers) {
+        const tX = Math.floor(tower.x / tileSize);
+        const tY = Math.floor(tower.y / tileSize);
+        if (gridX - 1 <= tX + 1 && gridY - 1 <= tY + 1 && tX - 1 <= gridX + 1 && tY - 1 <= gridY + 1) {
+            return tower.id;
+        }
+    }
+    return undefined;
 }
 
 function isLocationValidForTower(x: number, y: number) {
     if (!lastGameState) {
         return false;
-    }
-    const towerLocations = [];
-    for (const tower of lastGameState.towers) {
-        if (tower.type !== TowerType.None) {
-            const tX = Math.floor(tower.x / tileSize);
-            const tY = Math.floor(tower.y / tileSize);
-            towerLocations.push([tX, tY]);
-        }
     }
     for (const [gridX, gridY] of [
         [x - 1, y - 1],
@@ -62,10 +79,8 @@ function isLocationValidForTower(x: number, y: number) {
         if (!isTileAllowedTower(gridX, gridY)) {
             return false;
         }
-        for (const [tX, tY] of towerLocations) {
-            if (gridX - 1 <= tX + 1 && gridY - 1 <= tY + 1 && tX - 1 <= gridX + 1 && tY - 1 <= gridY + 1) {
-                return false;
-            }
+        if (overlapsWithTower(gridX, gridY) !== undefined) {
+            return false;
         }
     }
     return true;
