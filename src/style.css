@@ -48,7 +48,9 @@ body[data-season="3"] {
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
-    /* border: 2px solid black; */
+}
+#towerlist li[data-selected="true"] {
+    border: 1px solid black;
 }
 #towerlist [data-tower="Corn"] .name::before {
     content: "Corn";

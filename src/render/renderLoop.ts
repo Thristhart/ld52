@@ -92,7 +92,7 @@ export const animationFrame = async (timestamp: number) => {
         drawTower(context, tower.x, tower.y, tower.type, tower.growthStage, timestamp);
     });
 
-    if (isHovering && towerHoverPosition) {
+    if (isHovering && towerHoverPosition && selectedTowerInfo.selectedTower) {
         context.globalAlpha = 0.3;
         context.strokeRect(
             towerHoverPosition.x * tileSize - tileSize,

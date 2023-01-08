@@ -35,5 +35,6 @@ function drawSidebar() {
         }
         towerEntry.setAttribute("data-tower", towerName);
         towerEntry.setAttribute("data-cost", towerCosts[type].toString());
+        towerEntry.setAttribute("data-selected", (selectedTowerInfo.selectedTower === type).toString());
     });
 }

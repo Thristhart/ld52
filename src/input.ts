@@ -18,6 +18,12 @@ export const selectedTowerInfo = {
     selectedTower: TowerType.None,
 };
 
+function onKeyDown(e: KeyboardEvent) {
+    if (e.key === "Escape") {
+        selectedTowerInfo.selectedTower = TowerType.None;
+    }
+}
+
 function onMouseMove(e: MouseEvent) {
     const boundingClientRect = canvas.getBoundingClientRect();
     const x = (e.offsetX / boundingClientRect.width) * canvas.width;
@@ -97,6 +103,7 @@ export function setupListeners() {
     canvas.addEventListener("click", onClick);
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseleave", onMouseLeave);
+    document.body.addEventListener("keydown", onKeyDown);
 }
 
 if (import.meta.hot) {
@@ -104,5 +111,6 @@ if (import.meta.hot) {
         canvas.removeEventListener("click", onClick);
         canvas.removeEventListener("mousemove", onMouseMove);
         canvas.removeEventListener("mouseleave", onMouseLeave);
+        document.body.removeEventListener("keydown", onKeyDown);
     });
 }
