@@ -111,6 +111,11 @@ export const animationFrame = async (timestamp: number) => {
         context.globalAlpha = 1;
     }
 
+    drawSprite(context, hutSheet, defendPoint.x, defendPoint.y - hutSheet.spriteWidth / 2 + 6, [
+        getHutVersion(state.season),
+        0,
+    ]);
+
     for (const projectile of state.projectiles) {
         if (projectile.type === 0) {
             break;
@@ -127,11 +132,6 @@ export const animationFrame = async (timestamp: number) => {
         context.arc(projectileX, projectileY, 3, 0, Math.PI * 2);
         context.fill();
     }
-
-    drawSprite(context, hutSheet, defendPoint.x, defendPoint.y - hutSheet.spriteWidth / 2 + 6, [
-        getHutVersion(state.season),
-        0,
-    ]);
 
     context.fillStyle = "black";
     context.fillText("Health: " + state.playerHealth, canvas.width - 60, 10);
