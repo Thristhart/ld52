@@ -9,6 +9,7 @@
         "preview": "vite preview"
     },
     "devDependencies": {
+        "@types/howler": "^2.2.7",
         "typescript": "^4.9.4",
         "vite": "^4.0.4",
         "vite-plugin-comlink": "^3.0.5"
@@ -16,6 +17,7 @@
     "dependencies": {
         "@timohausmann/quadtree-ts": "^2.0.0-beta.1",
         "comlink": "^4.3.1",
-        "heap-js": "^2.2.0"
+        "heap-js": "^2.2.0",
+        "howler": "^2.2.3"
     }
 }
