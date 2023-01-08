@@ -4,26 +4,41 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+}
+body[data-season="0"] {
+    background-color: #83924c;
+}
+body[data-season="1"] {
+    background-color: #718f3f;
+}
+body[data-season="2"] {
+    background-color: #b08f4d;
+}
+body[data-season="3"] {
+    background-color: #9cbdc1;
 }
 #gameContainer {
     width: 100vmin;
     height: 100vmin;
     display: grid;
     grid-template-areas:
-        "gameplay"
-        "healthbar";
-    grid-template-columns: 1fr;
+        "gameplay sidebar"
+        "healthbar sidebar";
+    grid-template-columns: 1fr min-content;
     grid-template-rows: 1fr min-content;
     align-content: center;
     justify-items: center;
 }
 #gameplayContainer {
     grid-area: gameplay;
+    width: 100%;
+    height: 100%;
+}
+#sidebar {
+    grid-area: sidebar;
 }
 canvas {
     width: 100%;
-    height: 100%;
     object-fit: contain;
 
     image-rendering: -moz-crisp-edges;
