@@ -7,7 +7,7 @@ export enum TowerType {
 export const towerCosts = {
     [TowerType.None]: 5,
     [TowerType.Corn]: 5,
-    [TowerType.Grape]: 5,
+    [TowerType.Grape]: 30,
 };
 
 export const grapeAOEDuration = 500;

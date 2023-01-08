@@ -139,7 +139,9 @@ export const animationFrame = async (timestamp: number) => {
     }
 
     context.fillStyle = "black";
-    context.fillText("Health: " + state.playerHealth, canvas.width - 60, 10);
+    context.font =
+        "16pt Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,Android Emoji,EmojiSymbols,EmojiOne Mozilla,Twemoji Mozilla,Segoe UI Symbol,Noto Color Emoji Compat,emoji,noto-emojipedia-fallback";
+    context.fillText("👛" + state.currency, canvas.width - 90, 18);
 
     context.restore();
 

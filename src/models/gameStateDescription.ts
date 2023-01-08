@@ -55,6 +55,7 @@ export interface GameState {
     gametime: number;
     season: number;
     playerHealth: number;
+    currency: number;
     enemies: Enemy[];
     towers: Tower[];
     projectiles: Projectile[];

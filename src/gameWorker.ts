@@ -8,7 +8,7 @@ import { EnemyType } from "./models/enemies";
 import { AOEType } from "./models/gameStateDescription";
 import { spawnPoint, tileSize } from "./models/level";
 import { nextSeason } from "./models/season";
-import { grapeAOEDuration, TowerType } from "./models/towers";
+import { grapeAOEDuration, towerCosts, TowerType } from "./models/towers";
 
 export function getGameState() {
     return gameState;
@@ -16,15 +16,18 @@ export function getGameState() {
 
 let lastTowerId = -1;
 export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
-    gameState.towers.push({
-        type,
-        x: gridX * tileSize,
-        y: gridY * tileSize,
-        id: lastTowerId++,
-        lastGrowthTime: performance.now(),
-        growthStage: 0,
-        lastShootTime: 0,
-    });
+    if (gameState.currency >= towerCosts[type]) {
+        gameState.currency -= towerCosts[type];
+        gameState.towers.push({
+            type,
+            x: gridX * tileSize,
+            y: gridY * tileSize,
+            id: lastTowerId++,
+            lastGrowthTime: performance.now(),
+            growthStage: 0,
+            lastShootTime: 0,
+        });
+    }
 };
 
 const millisecondsPerTick = 16;
@@ -146,6 +149,7 @@ function setup() {
     lastEnemyTime = performance.now();
     addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
     gameState.playerHealth = 100;
+    gameState.currency = 50;
 
     setInterval(tick);
 }
