@@ -1,4 +1,5 @@
 import hutSheetPath from "~/assets/images/defendPoint.png";
+import { startMusicForSeason } from "~/bgMusic";
 import { getGameState } from "~/gameWorkerWrapper";
 import { isHovering, towerHoverPosition } from "~/input";
 import { lerp } from "~/lerp";
@@ -38,6 +39,8 @@ function getHutVersion(season: Season) {
     }
 }
 
+let previousSeason: Season;
+
 let frameHandle: number;
 let canceledFrameHandle: number | undefined;
 export const animationFrame = async (timestamp: number) => {
@@ -45,6 +48,15 @@ export const animationFrame = async (timestamp: number) => {
     if (canceledFrameHandle && canceledFrameHandle === frameHandle) {
         return;
     }
+
+    if (previousSeason === undefined) {
+        previousSeason = Season.Spring;
+    }
+    if (previousSeason != state.season) {
+        startMusicForSeason(state.season);
+    }
+    previousSeason = state.season;
+
     canvas.width = tileSize * levelWidth;
     canvas.height = tileSize * levelHeight;
 

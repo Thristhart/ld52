@@ -6,6 +6,7 @@ import { enemyQuadtree, towerQuadtree } from "./logic/quadtree";
 import { towerThink } from "./logic/towerThink";
 import { EnemyType } from "./models/enemies";
 import { spawnPoint, tileSize } from "./models/level";
+import { nextSeason } from "./models/season";
 import { TowerType } from "./models/towers";
 
 export function getGameState() {
@@ -39,6 +40,9 @@ async function tick() {
 }
 
 let lastEnemyTime = 0;
+let lastSeasonTime = 0;
+
+const timePerSeason = 300000;
 
 const timePerEnemy = 500;
 
@@ -103,6 +107,11 @@ async function doGameLogic(timestamp: number) {
     if (timestamp - lastEnemyTime > timePerEnemy) {
         addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
         lastEnemyTime = timestamp;
+    }
+
+    if (timestamp - lastSeasonTime > timePerSeason) {
+        gameState.season = nextSeason(gameState.season);
+        lastSeasonTime = timestamp;
     }
 
     gameState.gametime = timestamp;

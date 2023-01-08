@@ -7,8 +7,11 @@ import { Season } from "./models/season";
 let currentBGMusic: Howl;
 
 let BGMSpring = new Howl({ src: BGMSpringPath, volume: 0.03 });
+BGMSpring.loop(true);
 let BGMSummer = new Howl({ src: BGMSummerPath, volume: 0.03 });
+BGMSummer.loop(true);
 let BGMFall = new Howl({ src: BGMFallPath, volume: 0.03 });
+BGMFall.loop(true);
 
 export function startMusicForSeason(season: Season) {
     switch (season) {
@@ -32,7 +35,7 @@ export function startMusicForSeason(season: Season) {
 }
 
 function startMusic(track: Howl) {
-    let currentBGMusic = track;
+    currentBGMusic = track;
     currentBGMusic.play();
 }
 

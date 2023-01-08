@@ -24,7 +24,7 @@ Single enemy selection.
 
 ## Fuck how do we not just use PvZ templating?
 
-## Theming TBD
+## Corn
 
 -   Single shooter, 1 bullet per second, deals 4 damage.
 -   Scaling?
