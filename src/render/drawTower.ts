@@ -18,7 +18,7 @@ export function drawTower(
     y: number,
     towerType: TowerType,
     growthStage: number,
-    timestamp: number
+    _timestamp: number
 ) {
     switch (towerType) {
         case TowerType.Corn:
