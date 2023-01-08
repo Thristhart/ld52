@@ -7,4 +7,5 @@ export const gameState: GameState = {
     enemies: [],
     towers: [],
     projectiles: [],
+    aoes: [],
 };

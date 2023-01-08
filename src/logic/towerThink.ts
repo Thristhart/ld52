@@ -1,14 +1,17 @@
 import { Circle } from "@timohausmann/quadtree-ts";
-import { GameState, Tower } from "~/models/gameStateDescription";
+import { AOEType, GameState, Tower } from "~/models/gameStateDescription";
 import { cornProjectileDuration, ProjectileType } from "~/models/projectile";
 import { TowerType } from "~/models/towers";
-import { predictEnemyLocation } from "./enemyThink";
+import { damageEnemy, predictEnemyLocation } from "./enemyThink";
 import { enemyQuadtree } from "./quadtree";
 
 const growthDuration = 600;
 
 const cornFireDuration = 1000;
 const cornFireRadius = 100;
+
+const grapeFireDuration = 2000;
+const grapeFireRadius = 48;
 
 function circleCollision(circleA: Circle<unknown>, circleB: Circle<unknown>) {
     const dx = circleA.x - circleB.x;
@@ -55,5 +58,30 @@ export async function towerThink(gameState: GameState, tower: Tower, timestamp: 
                 }
                 return;
             }
+
+            if (timestamp - tower.lastShootTime > grapeFireDuration) {
+                const firingBounds = new Circle<number>({ x: tower.x, y: tower.y, r: grapeFireRadius });
+                const potentialEnemies = enemyQuadtree
+                    .retrieve(firingBounds)
+                    .filter((enemy) => circleCollision(enemy, firingBounds));
+
+                if (potentialEnemies.length > 0) {
+                    for (const enemyLocation of potentialEnemies) {
+                        const enemy = gameState.enemies.find((enemy) => enemy.id === enemyLocation.data);
+                        if (enemy) {
+                            damageEnemy(gameState, enemy, 5);
+                        }
+                    }
+                    gameState.aoes.push({
+                        type: AOEType.Grape,
+                        startTimestamp: timestamp,
+                        x: tower.x,
+                        y: tower.y,
+                        radius: grapeFireRadius,
+                    });
+                    tower.lastShootTime = timestamp;
+                }
+            }
+            break;
     }
 }

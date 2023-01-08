@@ -73,3 +73,10 @@ export const enemyThink = async (gameState: GameState, enemy: Enemy) => {
 function distanceFromDistances(dx: number, dy: number) {
     return Math.sqrt(dx * dx + dy * dy);
 }
+
+export function damageEnemy(gameState: GameState, enemy: Enemy, damage: number) {
+    enemy.health -= damage;
+    if (enemy.health <= 0) {
+        gameState.enemies.splice(gameState.enemies.indexOf(enemy), 1);
+    }
+}

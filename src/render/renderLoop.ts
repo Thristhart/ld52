@@ -8,6 +8,7 @@ import { PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint, levelHeight, levelWidth, tileSize } from "~/models/level";
 import { getProjectileProgress } from "~/models/projectile";
 import { Season } from "~/models/season";
+import { drawAOE } from "./drawAOE";
 import { drawEnemy } from "./drawEnemies";
 import { drawSprite, SpriteSheet } from "./drawSprite";
 import { drawTower } from "./drawTower";
@@ -131,6 +132,10 @@ export const animationFrame = async (timestamp: number) => {
         context.beginPath();
         context.arc(projectileX, projectileY, 3, 0, Math.PI * 2);
         context.fill();
+    }
+
+    for (const aoe of state.aoes) {
+        drawAOE(context, aoe, state.gametime);
     }
 
     context.fillStyle = "black";

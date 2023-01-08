@@ -9,3 +9,5 @@ export const towerCosts = {
     [TowerType.Corn]: 5,
     [TowerType.Grape]: 5,
 };
+
+export const grapeAOEDuration = 500;

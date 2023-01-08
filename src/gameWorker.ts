@@ -5,9 +5,10 @@ import { projectileThink } from "./logic/projectileThink";
 import { enemyQuadtree, towerQuadtree } from "./logic/quadtree";
 import { towerThink } from "./logic/towerThink";
 import { EnemyType } from "./models/enemies";
+import { AOEType } from "./models/gameStateDescription";
 import { spawnPoint, tileSize } from "./models/level";
 import { nextSeason } from "./models/season";
-import { TowerType } from "./models/towers";
+import { grapeAOEDuration, TowerType } from "./models/towers";
 
 export function getGameState() {
     return gameState;
@@ -102,6 +103,17 @@ async function doGameLogic(timestamp: number) {
             continue;
         }
         await projectileThink(gameState, projectile, timestamp);
+    }
+    for (let i = 0; i < gameState.aoes.length; i++) {
+        const projectile = gameState.aoes[i];
+        if (!projectile.type) {
+            continue;
+        }
+        if (projectile.type === AOEType.Grape) {
+            if (timestamp - projectile.startTimestamp > grapeAOEDuration) {
+                gameState.aoes.splice(i, 1);
+            }
+        }
     }
 
     if (timestamp - lastEnemyTime > timePerEnemy) {

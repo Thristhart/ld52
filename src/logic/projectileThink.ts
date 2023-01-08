@@ -1,5 +1,6 @@
 import { GameState, Projectile } from "~/models/gameStateDescription";
 import { getProjectileProgress, ProjectileType } from "~/models/projectile";
+import { damageEnemy } from "./enemyThink";
 
 export function projectileThink(gameState: GameState, projectile: Projectile, timestamp: number) {
     const progress = getProjectileProgress(projectile.type, projectile.startTimestamp, timestamp);
@@ -11,10 +12,7 @@ export function projectileThink(gameState: GameState, projectile: Projectile, ti
             case ProjectileType.Corn:
                 const target = gameState.enemies.find((enemy) => enemy.id === projectile.targetId);
                 if (target) {
-                    target.health -= 4;
-                    if (target.health <= 0) {
-                        gameState.enemies.splice(gameState.enemies.indexOf(target), 1);
-                    }
+                    damageEnemy(gameState, target, 4);
                 }
                 gameState.projectiles.splice(gameState.projectiles.indexOf(projectile), 1);
                 return;

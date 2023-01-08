@@ -40,6 +40,17 @@ export interface Projectile {
     startTimestamp: number;
 }
 
+export enum AOEType {
+    Grape = 1,
+}
+export interface AOE {
+    type: AOEType;
+    x: number;
+    y: number;
+    radius: number;
+    startTimestamp: number;
+}
+
 export interface GameState {
     gametime: number;
     season: number;
@@ -47,4 +58,5 @@ export interface GameState {
     enemies: Enemy[];
     towers: Tower[];
     projectiles: Projectile[];
+    aoes: AOE[];
 }
