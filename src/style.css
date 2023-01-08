@@ -47,3 +47,7 @@ canvas {
 #healthbar {
     grid-area: healthbar;
 }
+
+progress{
+    accent-color: red;
+}
