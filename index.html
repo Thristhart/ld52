@@ -7,7 +7,12 @@
         <title>LD52</title>
     </head>
     <body>
-        <canvas> You'll need javascript enabled to play! </canvas>
+        <div id="gameContainer">
+            <div id="gameplayContainer">
+                <canvas> You'll need javascript enabled to play! </canvas>
+            </div>
+            <progress value="100" max="100" id="healthbar"></progress>
+        </div>
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>

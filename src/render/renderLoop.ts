@@ -11,6 +11,7 @@ import { Season } from "~/models/season";
 import { drawEnemy } from "./drawEnemies";
 import { drawSprite, SpriteSheet } from "./drawSprite";
 import { drawTower } from "./drawTower";
+import { drawUI } from "./drawUI";
 import { levelBackgrounds } from "./levelBg";
 import { loadImage } from "./loadImage";
 
@@ -28,14 +29,10 @@ const hutSheet: SpriteSheet = {
 
 function getHutVersion(season: Season) {
     switch (season) {
-        case Season.Spring:
-        case Season.Summer:
-        case Season.Fall:
+        default:
             return 0;
         case Season.Winter:
             return 1;
-        default:
-            return 0;
     }
 }
 
@@ -130,6 +127,8 @@ export const animationFrame = async (timestamp: number) => {
     context.fillText("Health: " + state.playerHealth, canvas.width - 60, 10);
 
     context.restore();
+
+    drawUI(state);
 
     frameHandle = requestAnimationFrame(animationFrame);
 };
