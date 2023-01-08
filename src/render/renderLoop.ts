@@ -1,9 +1,11 @@
 import hutSheetPath from "~/assets/images/defendPoint.png";
 import { getGameState } from "~/gameWorkerWrapper";
 import { isHovering, towerHoverPosition } from "~/input";
+import { lerp } from "~/lerp";
 import { Direction } from "~/models/direction";
 import { PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint, levelHeight, levelWidth, tileSize } from "~/models/level";
+import { getProjectileProgress } from "~/models/projectile";
 import { Season } from "~/models/season";
 import { drawEnemy } from "./drawEnemies";
 import { drawSprite, SpriteSheet } from "./drawSprite";
@@ -68,11 +70,6 @@ export const animationFrame = async (timestamp: number) => {
         context.stroke();
     });
 
-    drawSprite(context, hutSheet, defendPoint.x, defendPoint.y - hutSheet.spriteWidth / 2 + 6, [
-        getHutVersion(state.season),
-        0,
-    ]);
-
     // TODO: enemy direction as they move
     for (const enemy of state.enemies) {
         if (enemy.type === 0) {
@@ -95,6 +92,29 @@ export const animationFrame = async (timestamp: number) => {
         );
     }
 
+    for (const projectile of state.projectiles) {
+        if (projectile.type === 0) {
+            break;
+        }
+        const progress = getProjectileProgress(projectile.type, projectile.startTimestamp, state.gametime);
+        const source = state.towers.find((tower) => tower.id === projectile.sourceId);
+        if (!source) {
+            continue;
+        }
+        const projectileX = lerp(source.x, projectile.targetPoint.x, progress);
+        const projectileY = lerp(source.y, projectile.targetPoint.y, progress);
+        context.fillStyle = "gold";
+        context.beginPath();
+        context.arc(projectileX, projectileY, 3, 0, Math.PI * 2);
+        context.fill();
+    }
+
+    drawSprite(context, hutSheet, defendPoint.x, defendPoint.y - hutSheet.spriteWidth / 2 + 6, [
+        getHutVersion(state.season),
+        0,
+    ]);
+
+    context.fillStyle = "black";
     context.fillText("Health: " + state.playerHealth, canvas.width - 60, 10);
 
     context.restore();

@@ -15,6 +15,7 @@ export interface Enemy {
     id: number;
     x: number;
     y: number;
+    health: number;
     path: PathNode[];
 }
 
@@ -32,6 +33,10 @@ export interface Projectile {
     type: number;
     sourceId: number;
     targetId: number;
+    targetPoint: {
+        x: number;
+        y: number;
+    };
     startTimestamp: number;
 }
 

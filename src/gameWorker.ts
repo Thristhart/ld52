@@ -1,6 +1,7 @@
 import { Circle, Rectangle } from "@timohausmann/quadtree-ts";
 import { enemyThink } from "./logic/enemyThink";
 import { gameState } from "./logic/gameState";
+import { projectileThink } from "./logic/projectileThink";
 import { enemyQuadtree, towerQuadtree } from "./logic/quadtree";
 import { towerThink } from "./logic/towerThink";
 import { EnemyType } from "./models/enemies";
@@ -30,12 +31,11 @@ let lastTickTime = performance.now();
 async function tick() {
     const now = performance.now();
     let dt = now - lastTickTime;
-    while (dt > millisecondsPerTick) {
+    while (dt >= millisecondsPerTick) {
         lastTickTime = now;
         await doGameLogic(now);
         dt -= millisecondsPerTick;
     }
-    setTimeout(tick, millisecondsPerTick - dt);
 }
 
 let lastEnemyTime = 0;
@@ -92,11 +92,20 @@ async function doGameLogic(timestamp: number) {
         }
         await towerThink(gameState, tower, timestamp);
     }
+    for (let i = 0; i < gameState.projectiles.length; i++) {
+        const projectile = gameState.projectiles[i];
+        if (!projectile.type) {
+            continue;
+        }
+        await projectileThink(gameState, projectile, timestamp);
+    }
 
     if (timestamp - lastEnemyTime > timePerEnemy) {
         addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
         lastEnemyTime = timestamp;
     }
+
+    gameState.gametime = timestamp;
 }
 
 let lastEntId = -1;
@@ -106,6 +115,7 @@ function addEnemy(type: EnemyType, x: number, y: number) {
         x,
         y,
         type,
+        health: 10,
         id: lastEntId++,
         path: [],
     });
@@ -114,8 +124,9 @@ function addEnemy(type: EnemyType, x: number, y: number) {
 function setup() {
     lastEnemyTime = performance.now();
     addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
-    tick();
     gameState.playerHealth = 100;
+
+    setInterval(tick);
 }
 
 setup();

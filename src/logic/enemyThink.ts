@@ -1,9 +1,46 @@
+import { lerp } from "~/lerp";
 import { Enemy, GameState, PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint } from "~/models/level";
 import { pathToPoint } from "./pathfinding";
 
 const enemySpeed = 1;
 const enemyDamage = 1;
+
+export function predictEnemyLocation(enemy: Enemy | undefined, futureMilliseconds: number) {
+    if (!enemy) {
+        return { x: 0, y: 0 };
+    }
+    const path = enemy.path;
+    if (path.length === 0 || path[0]?.type === PathNodeType.Empty) {
+        return { x: enemy.x, y: enemy.y };
+    }
+    let futureX = enemy.x;
+    let futureY = enemy.y;
+    let remainingDuration = futureMilliseconds;
+    let nextTargetIndex = path.findIndex((item) => item.type === PathNodeType.Upcoming);
+    while (remainingDuration > 0) {
+        const nextTarget = path[nextTargetIndex];
+        nextTargetIndex++;
+        if (!nextTarget) {
+            return { x: futureX, y: futureY };
+        }
+        const dx = nextTarget.x - futureX;
+        const dy = nextTarget.y - futureY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const timeToTravelDistance = distance / (enemySpeed / 18.5); // 16 milliseconds per tick, adjusted to 18.5 bc of imprecision
+        if (timeToTravelDistance <= remainingDuration) {
+            remainingDuration -= timeToTravelDistance;
+            futureX = nextTarget.x;
+            futureY = nextTarget.y;
+        } else {
+            const progress = remainingDuration / timeToTravelDistance;
+            futureX = lerp(futureX, nextTarget.x, progress);
+            futureY = lerp(futureY, nextTarget.y, progress);
+            remainingDuration = 0;
+        }
+    }
+    return { x: futureX, y: futureY };
+}
 
 export const enemyThink = async (gameState: GameState, enemy: Enemy) => {
     const path = enemy.path;
