@@ -1,7 +1,7 @@
-import { Circle } from "@timohausmann/quadtree-ts";
+import { Rectangle } from "@timohausmann/quadtree-ts";
 import Heap from "heap-js";
 import { isTilePathable, levelHeight, levelWidth, tileSize } from "~/models/level";
-import { entityQuadtree } from "./quadtree";
+import { towerQuadtree } from "./quadtree";
 
 export interface Point {
     x: number;
@@ -109,6 +109,15 @@ function getCheapestKnownScoreForNode(node: Node) {
     return node.cheapestKnownPathScore ?? Infinity;
 }
 
+function AABBCollision(rectA: Rectangle<unknown>, rectB: Rectangle<unknown>) {
+    return (
+        rectA.x <= rectB.x + rectB.width &&
+        rectA.y <= rectB.y + rectB.height &&
+        rectB.x <= rectA.x + rectA.width &&
+        rectB.y <= rectA.y + rectA.height
+    );
+}
+
 const towerWeight = 1;
 
 export function pathToPoint(from: Point, to: Point) {
@@ -147,14 +156,20 @@ export function pathToPoint(from: Point, to: Point) {
             const isDiagonal = currentNode.x !== neighbor.x && currentNode.y !== neighbor.y;
             let weight = isDiagonal ? 2.41421 : 1;
 
-            const nearby = entityQuadtree.retrieve(
-                new Circle({ x: currentNode.point.x, y: currentNode.point.y, r: tileSize * 2 })
-            );
+            const bounds = new Rectangle<number>({
+                x: neighbor.point.x - tileSize * 2,
+                y: neighbor.point.y - tileSize * 2,
+                width: tileSize * 4,
+                height: tileSize * 4,
+            });
+            const nearby = towerQuadtree.retrieve(bounds);
+            let weightFromTowers = 0;
             for (const nearbyNode of nearby) {
-                if (nearbyNode.data?.type === "tower") {
-                    weight += towerWeight;
+                if (AABBCollision(nearbyNode, bounds)) {
+                    weightFromTowers += towerWeight;
                 }
             }
+            weight += weightFromTowers;
 
             const scoreForNeighbor = getCheapestKnownScoreForNode(currentNode) + weight;
             if (scoreForNeighbor < getCheapestKnownScoreForNode(neighbor)) {

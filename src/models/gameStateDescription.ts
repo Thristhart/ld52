@@ -25,6 +25,7 @@ export interface Tower {
     y: number;
     growthStage: number;
     lastGrowthTime: number;
+    lastShootTime: number;
 }
 
 export interface Projectile {
