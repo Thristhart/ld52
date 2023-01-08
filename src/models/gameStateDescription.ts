@@ -1,10 +1,8 @@
-import BufferBackedObject, { DecodedBuffer } from "buffer-backed-object/buffer-backed-object";
-
-export const PathNodeDescription = {
-    type: BufferBackedObject.Uint8(),
-    x: BufferBackedObject.Uint32(),
-    y: BufferBackedObject.Uint32(),
-};
+export interface PathNode {
+    type: number;
+    x: number;
+    y: number;
+}
 
 export enum PathNodeType {
     Empty = 0,
@@ -12,29 +10,35 @@ export enum PathNodeType {
     Visited = 2,
 }
 
-export const EnemyDescription = {
-    type: BufferBackedObject.Uint8(),
-    x: BufferBackedObject.Float32(),
-    y: BufferBackedObject.Float32(),
-    path: BufferBackedObject.NestedArrayOfBufferBackedObjects(625, PathNodeDescription),
-};
+export interface Enemy {
+    type: number;
+    id: number;
+    x: number;
+    y: number;
+    path: PathNode[];
+}
 
-export const TowerDescription = {
-    type: BufferBackedObject.Uint8(),
-    x: BufferBackedObject.Uint16(),
-    y: BufferBackedObject.Uint16(),
-    growthStage: BufferBackedObject.Uint8(),
-    lastGrowthTime: BufferBackedObject.Uint32(),
-};
+export interface Tower {
+    type: number;
+    id: number;
+    x: number;
+    y: number;
+    growthStage: number;
+    lastGrowthTime: number;
+}
 
-export const GameStateDescription = {
-    gametime: BufferBackedObject.Uint32(),
-    season: BufferBackedObject.Uint8(),
-    playerHealth: BufferBackedObject.Uint32(),
-    enemies: BufferBackedObject.NestedArrayOfBufferBackedObjects(1024, EnemyDescription),
-    towers: BufferBackedObject.NestedArrayOfBufferBackedObjects(128, TowerDescription),
-};
+export interface Projectile {
+    type: number;
+    sourceId: number;
+    targetId: number;
+    startTimestamp: number;
+}
 
-export type GameState = DecodedBuffer<typeof GameStateDescription>;
-export type EnemyState = DecodedBuffer<typeof EnemyDescription>;
-export type TowerState = DecodedBuffer<typeof TowerDescription>;
+export interface GameState {
+    gametime: number;
+    season: number;
+    playerHealth: number;
+    enemies: Enemy[];
+    towers: Tower[];
+    projectiles: Projectile[];
+}

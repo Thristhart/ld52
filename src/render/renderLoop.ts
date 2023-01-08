@@ -52,7 +52,7 @@ export const animationFrame = async (timestamp: number) => {
     context.drawImage(levelBackgrounds[state.season], 0, 0);
 
     state.enemies.forEach((enemy) => {
-        if (enemy.path[0].type === PathNodeType.Empty) {
+        if (enemy.path?.[0]?.type === PathNodeType.Empty) {
             return;
         }
         context.beginPath();
@@ -74,9 +74,12 @@ export const animationFrame = async (timestamp: number) => {
     ]);
 
     // TODO: enemy direction as they move
-    state.enemies.forEach((enemy) => {
+    for (const enemy of state.enemies) {
+        if (enemy.type === 0) {
+            break;
+        }
         drawEnemy(context, enemy.x, enemy.y, enemy.type, timestamp, Direction.Right);
-    });
+    }
 
     // TODO: sort by y to ensure overlap is correct
     state.towers.forEach((tower) => {

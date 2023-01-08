@@ -1,5 +1,7 @@
+import { Circle } from "@timohausmann/quadtree-ts";
 import Heap from "heap-js";
 import { isTilePathable, levelHeight, levelWidth, tileSize } from "~/models/level";
+import { entityQuadtree } from "./quadtree";
 
 export interface Point {
     x: number;
@@ -14,6 +16,7 @@ function getNodeAtPoint(point: Point): Node {
         point: { x: x * tileSize + tileSize / 2, y: y * tileSize + tileSize / 2 },
         x,
         y,
+        isOpen: false,
     };
 }
 
@@ -50,6 +53,7 @@ interface Node {
     heuristic?: number;
     parent?: Node;
     cheapestKnownPathScore?: number;
+    isOpen: boolean;
 }
 
 function makeNodeAt(nodemap: Map<string, Node>, x: number, y: number): Node {
@@ -57,14 +61,17 @@ function makeNodeAt(nodemap: Map<string, Node>, x: number, y: number): Node {
     if (existing) {
         return existing;
     }
-    return {
+    const node = {
         x,
         y,
         point: {
             x: x * tileSize + tileSize / 2,
             y: y * tileSize + tileSize / 2,
         },
+        isOpen: false,
     };
+    nodemap.set(`${x},${y}`, node);
+    return node;
 }
 
 function getNeighbors(nodeMap: Map<string, Node>, node: Node) {
@@ -102,6 +109,8 @@ function getCheapestKnownScoreForNode(node: Node) {
     return node.cheapestKnownPathScore ?? Infinity;
 }
 
+const towerWeight = 1;
+
 export function pathToPoint(from: Point, to: Point) {
     const startNode = getNodeAtPoint(from);
     const endNode = getNodeAtPoint(to);
@@ -124,6 +133,7 @@ export function pathToPoint(from: Point, to: Point) {
     open.push(startNode);
 
     for (const currentNode of open) {
+        currentNode.isOpen = false;
         if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
             return backtrack(currentNode);
         }
@@ -135,14 +145,24 @@ export function pathToPoint(from: Point, to: Point) {
             }
             // Diagonals should cost more
             const isDiagonal = currentNode.x !== neighbor.x && currentNode.y !== neighbor.y;
-            const weight = isDiagonal ? 2.41421 : 1;
+            let weight = isDiagonal ? 2.41421 : 1;
+
+            const nearby = entityQuadtree.retrieve(
+                new Circle({ x: currentNode.point.x, y: currentNode.point.y, r: tileSize * 2 })
+            );
+            for (const nearbyNode of nearby) {
+                if (nearbyNode.data?.type === "tower") {
+                    weight += towerWeight;
+                }
+            }
 
             const scoreForNeighbor = getCheapestKnownScoreForNode(currentNode) + weight;
             if (scoreForNeighbor < getCheapestKnownScoreForNode(neighbor)) {
                 neighbor.cheapestKnownPathScore = scoreForNeighbor;
                 neighbor.parent = currentNode;
-                if (!open.contains(neighbor, (a, b) => a.x === b.x && a.y === b.y)) {
+                if (!neighbor.isOpen) {
                     open.push(neighbor);
+                    neighbor.isOpen = true;
                 }
             }
         }

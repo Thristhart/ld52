@@ -1,8 +1,7 @@
-import BufferBackedObject from "buffer-backed-object/buffer-backed-object";
-import { GameState, GameStateDescription } from "~/models/gameStateDescription";
+import { GameState } from "~/models/gameStateDescription";
 
 export const gameWorker = new ComlinkWorker<typeof import("./gameWorker")>(new URL("./gameWorker", import.meta.url));
 export async function getGameState() {
-    return (lastGameState = new BufferBackedObject(await gameWorker.gameStateBuffer, GameStateDescription));
+    return (lastGameState = await gameWorker.gameState);
 }
 export let lastGameState: GameState;

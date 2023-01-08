@@ -1,23 +1,31 @@
-import BufferBackedObject, { structSize } from "buffer-backed-object/buffer-backed-object";
-import { GameStateDescription, PathNodeType } from "~/models/gameStateDescription";
+import { Circle, Rectangle } from "@timohausmann/quadtree-ts";
 import { enemyThink } from "./logic/enemyThink";
+import { entityQuadtree } from "./logic/quadtree";
 import { towerThink } from "./logic/towerThink";
 import { EnemyType } from "./models/enemies";
+import { GameState } from "./models/gameStateDescription";
 import { spawnPoint, tileSize } from "./models/level";
 import { TowerType } from "./models/towers";
 
-export const gameStateBuffer = new ArrayBuffer(structSize(GameStateDescription));
-const gameState = new BufferBackedObject(gameStateBuffer, GameStateDescription);
+export const gameState: GameState = {
+    gametime: 0,
+    season: 0,
+    playerHealth: 0,
+    enemies: [],
+    towers: [],
+    projectiles: [],
+};
 
+let lastTowerId = -1;
 export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
-    const container = gameState.towers.find((tower) => tower.type === TowerType.None);
-    if (!container) {
-        console.error("No room for another tower!");
-        return;
-    }
-    container.type = type;
-    container.x = gridX * tileSize;
-    container.y = gridY * tileSize;
+    gameState.towers.push({
+        type,
+        x: gridX * tileSize,
+        y: gridY * tileSize,
+        id: lastTowerId++,
+        lastGrowthTime: 0,
+        growthStage: 0,
+    });
 };
 
 const millisecondsPerTick = 16;
@@ -39,12 +47,52 @@ let lastEnemyTime = 0;
 const timePerEnemy = 500;
 
 async function doGameLogic(timestamp: number) {
+    entityQuadtree.clear();
     for (let i = 0; i < gameState.enemies.length; i++) {
         const enemy = gameState.enemies[i];
         if (!enemy.type) {
             continue;
         }
-        await enemyThink(gameState, i, enemy);
+        entityQuadtree.insert(
+            new Circle({
+                x: enemy.x,
+                y: enemy.y,
+                r: 8,
+                data: {
+                    type: "enemy",
+                    id: enemy.id,
+                },
+            })
+        );
+    }
+    for (let i = 0; i < gameState.towers.length; i++) {
+        const tower = gameState.towers[i];
+        if (!tower.type) {
+            continue;
+        }
+        entityQuadtree.insert(
+            new Rectangle({
+                x: tower.x,
+                y: tower.y,
+                width: 16,
+                height: 16,
+                data: {
+                    type: "tower",
+                    id: tower.id,
+                },
+            })
+        );
+    }
+    for (let i = 0; i < gameState.enemies.length; i++) {
+        const enemy = gameState.enemies[i];
+        if (!enemy.type) {
+            continue;
+        }
+        const result = await enemyThink(gameState, enemy);
+        if (result === -1) {
+            gameState.enemies.splice(i, 1);
+            i--;
+        }
     }
     for (let i = 0; i < gameState.towers.length; i++) {
         const tower = gameState.towers[i];
@@ -60,16 +108,16 @@ async function doGameLogic(timestamp: number) {
     }
 }
 
+let lastEntId = -1;
+
 function addEnemy(type: EnemyType, x: number, y: number) {
-    const container = gameState.enemies.find((enemy) => enemy.type === EnemyType.None);
-    if (!container) {
-        console.error("No room for another enemy!");
-        return;
-    }
-    container.type = type;
-    container.x = x;
-    container.y = y;
-    container.path[0].type = PathNodeType.Empty;
+    gameState.enemies.push({
+        x,
+        y,
+        type,
+        id: lastEntId++,
+        path: [],
+    });
 }
 
 function setup() {
@@ -80,5 +128,3 @@ function setup() {
 }
 
 setup();
-
-// TODO: spawn enemies regularly
