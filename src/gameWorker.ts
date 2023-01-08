@@ -1,20 +1,15 @@
 import { Circle, Rectangle } from "@timohausmann/quadtree-ts";
 import { enemyThink } from "./logic/enemyThink";
-import { entityQuadtree } from "./logic/quadtree";
+import { gameState } from "./logic/gameState";
+import { enemyQuadtree, towerQuadtree } from "./logic/quadtree";
 import { towerThink } from "./logic/towerThink";
 import { EnemyType } from "./models/enemies";
-import { GameState } from "./models/gameStateDescription";
 import { spawnPoint, tileSize } from "./models/level";
 import { TowerType } from "./models/towers";
 
-export const gameState: GameState = {
-    gametime: 0,
-    season: 0,
-    playerHealth: 0,
-    enemies: [],
-    towers: [],
-    projectiles: [],
-};
+export function getGameState() {
+    return gameState;
+}
 
 let lastTowerId = -1;
 export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
@@ -25,6 +20,7 @@ export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
         id: lastTowerId++,
         lastGrowthTime: 0,
         growthStage: 0,
+        lastShootTime: 0,
     });
 };
 
@@ -47,21 +43,19 @@ let lastEnemyTime = 0;
 const timePerEnemy = 500;
 
 async function doGameLogic(timestamp: number) {
-    entityQuadtree.clear();
+    towerQuadtree.clear();
+    enemyQuadtree.clear();
     for (let i = 0; i < gameState.enemies.length; i++) {
         const enemy = gameState.enemies[i];
         if (!enemy.type) {
             continue;
         }
-        entityQuadtree.insert(
+        enemyQuadtree.insert(
             new Circle({
                 x: enemy.x,
                 y: enemy.y,
                 r: 8,
-                data: {
-                    type: "enemy",
-                    id: enemy.id,
-                },
+                data: enemy.id,
             })
         );
     }
@@ -70,16 +64,13 @@ async function doGameLogic(timestamp: number) {
         if (!tower.type) {
             continue;
         }
-        entityQuadtree.insert(
+        towerQuadtree.insert(
             new Rectangle({
-                x: tower.x,
-                y: tower.y,
-                width: 16,
-                height: 16,
-                data: {
-                    type: "tower",
-                    id: tower.id,
-                },
+                x: tower.x - tileSize * 1.5,
+                y: tower.y - tileSize * 1.5,
+                width: tileSize * 3,
+                height: tileSize * 3,
+                data: tower.id,
             })
         );
     }
@@ -99,7 +90,7 @@ async function doGameLogic(timestamp: number) {
         if (!tower.type) {
             continue;
         }
-        await towerThink(gameState, i, tower, timestamp);
+        await towerThink(gameState, tower, timestamp);
     }
 
     if (timestamp - lastEnemyTime > timePerEnemy) {

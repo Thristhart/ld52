@@ -27,6 +27,9 @@ function onMouseMove(e: MouseEvent) {
 }
 
 function isLocationValidForTower(x: number, y: number) {
+    if (!lastGameState) {
+        return false;
+    }
     const towerLocations = [];
     for (const tower of lastGameState.towers) {
         if (tower.type !== TowerType.None) {
