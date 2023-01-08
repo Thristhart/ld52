@@ -1,6 +1,6 @@
 import ldtkData from "~/assets/ldtk/testLevel.json";
 
-const level = ldtkData.levels[0];
+const level = ldtkData.levels[1];
 
 function getLayerWithID(id: string) {
     const layer = level.layerInstances.find((layer) => layer.__identifier === id);
