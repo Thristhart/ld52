@@ -1,8 +1,9 @@
 import { EnemyState, GameState, PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint } from "~/models/level";
+import { removeFromBufferBasedArray } from "~/removeFromBufferBasedArray";
 import { pathToPoint } from "./pathfinding";
 
-const enemySpeed = 1;
+const enemySpeed = 10;
 const enemyDamage = 1;
 
 // TODO: weight pathfinding by nearby towers
@@ -21,9 +22,7 @@ export const enemyThink = async (gameState: GameState, entId: number, enemy: Ene
     if (nextTargetIndex == -1) {
         console.log("finished path");
         gameState.playerHealth -= enemyDamage;
-        console.log("Health Down: ", gameState.playerHealth);
-        gameState.enemies[entId].type = 0;
-        path[0].type = PathNodeType.Empty;
+        removeFromBufferBasedArray(gameState.enemies, entId);
         return;
     }
     const nextTarget = path[nextTargetIndex];

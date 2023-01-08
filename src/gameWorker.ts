@@ -1,5 +1,5 @@
 import BufferBackedObject, { structSize } from "buffer-backed-object/buffer-backed-object";
-import { GameStateDescription } from "~/models/gameStateDescription";
+import { GameStateDescription, PathNodeType } from "~/models/gameStateDescription";
 import { enemyThink } from "./logic/enemyThink";
 import { towerThink } from "./logic/towerThink";
 import { EnemyType } from "./models/enemies";
@@ -69,6 +69,7 @@ function addEnemy(type: EnemyType, x: number, y: number) {
     container.type = type;
     container.x = x;
     container.y = y;
+    container.path[0].type = PathNodeType.Empty;
 }
 
 function setup() {
