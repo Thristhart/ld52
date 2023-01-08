@@ -1,7 +1,7 @@
 import hutSheetPath from "~/assets/images/defendPoint.png";
 import { startMusicForSeason } from "~/bgMusic";
 import { getGameState } from "~/gameWorkerWrapper";
-import { isHovering, towerHoverPosition } from "~/input";
+import { isHovering, selectedTowerInfo, towerHoverPosition } from "~/input";
 import { lerp } from "~/lerp";
 import { Direction } from "~/models/direction";
 import { PathNodeType } from "~/models/gameStateDescription";
@@ -93,12 +93,22 @@ export const animationFrame = async (timestamp: number) => {
     });
 
     if (isHovering && towerHoverPosition) {
-        context.fillRect(
+        context.globalAlpha = 0.3;
+        context.strokeRect(
             towerHoverPosition.x * tileSize - tileSize,
             towerHoverPosition.y * tileSize - tileSize,
             tileSize * 3,
             tileSize * 3
         );
+        drawTower(
+            context,
+            towerHoverPosition.x * tileSize,
+            towerHoverPosition.y * tileSize,
+            selectedTowerInfo.selectedTower,
+            5,
+            timestamp
+        );
+        context.globalAlpha = 1;
     }
 
     for (const projectile of state.projectiles) {

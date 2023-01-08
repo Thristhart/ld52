@@ -14,6 +14,10 @@ export const mouseGridPosition = { x: 0, y: 0 };
 export let isHovering = false;
 export let towerHoverPosition: { x: number; y: number } | undefined;
 
+export const selectedTowerInfo = {
+    selectedTower: TowerType.None,
+};
+
 function onMouseMove(e: MouseEvent) {
     const boundingClientRect = canvas.getBoundingClientRect();
     const x = (e.offsetX / boundingClientRect.width) * canvas.width;
@@ -62,6 +66,9 @@ function isLocationValidForTower(x: number, y: number) {
 }
 
 function findValidLocationForTower() {
+    if (!selectedTowerInfo.selectedTower) {
+        return;
+    }
     towerHoverPosition = undefined;
     const { x, y } = mouseGridPosition;
     for (const [gridX, gridY] of [

@@ -22,6 +22,6 @@ export function drawTower(
 ) {
     switch (towerType) {
         case TowerType.Corn:
-            return drawSprite(context, cornSheet, x, y, getCornGrowthFrame(growthStage));
+            return drawSprite(context, cornSheet, x + cornSheet.spriteWidth / 4, y, getCornGrowthFrame(growthStage));
     }
 }

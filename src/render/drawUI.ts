@@ -1,3 +1,4 @@
+import { selectedTowerInfo } from "~/input";
 import { GameState } from "~/models/gameStateDescription";
 import { towerCosts, TowerType } from "~/models/towers";
 
@@ -18,6 +19,18 @@ function drawSidebar() {
         let towerEntry = towerlist.querySelector(`[data-tower=${towerName}]`);
         if (!towerEntry) {
             towerEntry = document.createElement("li");
+            const name = document.createElement("span");
+            name.className = "name";
+            const cost = document.createElement("span");
+            cost.className = "cost";
+            const image = document.createElement("div");
+            image.className = "image";
+            towerEntry.appendChild(image);
+            towerEntry.appendChild(name);
+            towerEntry.appendChild(cost);
+            towerEntry.addEventListener("click", () => {
+                selectedTowerInfo.selectedTower = type;
+            });
             towerlist.appendChild(towerEntry);
         }
         towerEntry.setAttribute("data-tower", towerName);
