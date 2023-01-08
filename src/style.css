@@ -63,6 +63,17 @@ body[data-season="3"] {
     background-position-x: 100%;
     background-repeat: no-repeat;
 }
+#towerlist [data-tower="Grape"] .name::before {
+    content: "Grapes";
+}
+#towerlist [data-tower="Grape"] .image {
+    background-image: url(./assets/images/grapes.png);
+    width: 32px;
+    height: 64px;
+    background-size: 600%;
+    background-position-x: 100%;
+    background-repeat: no-repeat;
+}
 canvas {
     width: 100%;
     object-fit: contain;

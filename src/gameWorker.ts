@@ -20,7 +20,7 @@ export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
         x: gridX * tileSize,
         y: gridY * tileSize,
         id: lastTowerId++,
-        lastGrowthTime: 0,
+        lastGrowthTime: performance.now(),
         growthStage: 0,
         lastShootTime: 0,
     });

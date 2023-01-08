@@ -47,5 +47,13 @@ export async function towerThink(gameState: GameState, tower: Tower, timestamp: 
                 }
             }
             break;
+        case TowerType.Grape:
+            if (tower.growthStage < 5) {
+                if (timestamp - tower.lastGrowthTime > growthDuration) {
+                    tower.growthStage++;
+                    tower.lastGrowthTime = timestamp;
+                }
+                return;
+            }
     }
 }

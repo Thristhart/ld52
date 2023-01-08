@@ -10,7 +10,7 @@ export function drawUI(state: GameState) {
     drawSidebar();
 }
 
-const availableTowers = [TowerType.Corn];
+const availableTowers = [TowerType.Corn, TowerType.Grape];
 
 const towerlist = document.getElementById("towerlist") as HTMLUListElement;
 function drawSidebar() {

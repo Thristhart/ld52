@@ -5,7 +5,7 @@ import { TowerType } from "./models/towers";
 
 function onClick() {
     if (towerHoverPosition) {
-        gameWorker.placeTower(TowerType.Corn, towerHoverPosition.x, towerHoverPosition.y);
+        gameWorker.placeTower(selectedTowerInfo.selectedTower, towerHoverPosition.x, towerHoverPosition.y);
     }
 }
 
