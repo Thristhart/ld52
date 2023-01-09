@@ -8,8 +8,14 @@ const healthbar = document.getElementById("healthbar") as HTMLProgressElement;
 export function drawUI(state: GameState) {
     healthbar.value = state.playerHealth;
     document.body.dataset.season = state.season.toString();
+    drawSeasonMeter(state);
     drawLeftSidebar();
     drawSidebar();
+}
+
+const seasonbar = document.getElementById("seasonbar") as HTMLDivElement;
+function drawSeasonMeter(state: GameState) {
+    seasonbar.style.setProperty("--seasonProgress", `${(state.gametime / (300000 * 4)) % 1}`);
 }
 
 const inspectorContent = document.getElementById("inspectorContent") as HTMLElement;

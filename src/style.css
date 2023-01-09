@@ -23,7 +23,7 @@ body[data-season="3"] {
     display: grid;
     grid-template-areas:
         "leftSidebar gameplay sidebar"
-        "leftSidebar healthbar sidebar";
+        "leftSidebar bottomControls sidebar";
     grid-template-columns: max-content 1fr min-content;
     grid-template-rows: 1fr 1fr;
     align-content: center;
@@ -66,8 +66,34 @@ canvas {
     image-rendering: -moz-crisp-edges;
     image-rendering: pixelated;
 }
-#healthbar {
-    grid-area: healthbar;
+#bottomcontrols {
+    grid-area: bottomControls;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+#seasonbar {
+    margin-top: 1.3rem;
+    background-image: url("./assets/images/season_bar.png");
+    background-position-y: center;
+    background-size: 100%;
+    aspect-ratio: 10/1;
+    width: 60vmin;
+    border-radius: 20px;
+    border: 3px solid rgb(193, 105, 42);
+    position: relative;
+    overflow: hidden;
+}
+#seasonbar .bar {
+    content: "";
+    display: block;
+    position: absolute;
+    left: calc(var(--seasonProgress) * 100%);
+    top: 0;
+    width: 3px;
+    background-color: black;
+    height: 100%;
 }
 
 progress {
