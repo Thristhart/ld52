@@ -8,6 +8,7 @@ TODO:
 -   Towers track number of kills
 -   Towers can be inspected X
 -   Towers can be sold for an amount based on kill count
+-   Make the towers grow faster X
 
 # Presentation
 

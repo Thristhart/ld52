@@ -5,7 +5,7 @@ import { TowerType } from "~/models/towers";
 import { damageEnemy, predictEnemyLocation } from "./enemyThink";
 import { enemyQuadtree } from "./quadtree";
 
-const growthDuration = 600;
+const growthDuration = 300;
 
 const cornFireDuration = 1000;
 const cornFireRadius = 100;
@@ -69,7 +69,13 @@ export async function towerThink(gameState: GameState, tower: Tower, timestamp: 
                     for (const enemyLocation of potentialEnemies) {
                         const enemy = gameState.enemies.find((enemy) => enemy.id === enemyLocation.data);
                         if (enemy) {
-                            damageEnemy(gameState, enemy, 5);
+                            let kill = damageEnemy(gameState, enemy, 5);
+                            if (kill) {
+                                let killer = tower;
+                                if (killer !== undefined) {
+                                    killer.kills += 1;
+                                }
+                            }
                         }
                     }
                     gameState.aoes.push({

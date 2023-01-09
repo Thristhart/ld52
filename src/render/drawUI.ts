@@ -37,7 +37,7 @@ function drawLeftSidebar() {
             content.appendChild(kills);
             inspectorContent.appendChild(content);
         }
-        content.querySelector(".kills")?.setAttribute("data-kills", (20).toString());
+        content.querySelector(".kills")?.setAttribute("data-kills", towerInfo.kills.toString());
         content.setAttribute("data-tower", towerName);
     }
 }

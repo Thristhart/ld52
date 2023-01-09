@@ -12,7 +12,13 @@ export function projectileThink(gameState: GameState, projectile: Projectile, ti
             case ProjectileType.Corn:
                 const target = gameState.enemies.find((enemy) => enemy.id === projectile.targetId);
                 if (target) {
-                    damageEnemy(gameState, target, 4);
+                    let kill = damageEnemy(gameState, target, 4);
+                    if (kill) {
+                        let killer = gameState.towers.find((x) => x.id === projectile.sourceId);
+                        if (killer !== undefined) {
+                            killer.kills += 1;
+                        }
+                    }
                 }
                 gameState.projectiles.splice(gameState.projectiles.indexOf(projectile), 1);
                 return;

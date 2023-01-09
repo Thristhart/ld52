@@ -78,5 +78,7 @@ export function damageEnemy(gameState: GameState, enemy: Enemy, damage: number) 
     enemy.health -= damage;
     if (enemy.health <= 0) {
         gameState.enemies.splice(gameState.enemies.indexOf(enemy), 1);
+        return true;
     }
+    return false;
 }

@@ -26,6 +26,7 @@ export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
             lastGrowthTime: performance.now(),
             growthStage: 0,
             lastShootTime: 0,
+            kills: 0,
         });
     }
 };
