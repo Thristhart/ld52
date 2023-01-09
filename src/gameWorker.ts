@@ -186,6 +186,11 @@ function progression(timestamp: number) {
     if (timestamp > timePerSeason) {
         golemsEnabled = true;
     }
+    if (timestamp > timePerSeason && timestamp <= timePerSeason * 2) {
+        timePerGolem =
+            30 * oneSecond - (20 * oneSecond * Math.min(timestamp - timePerSeason, timePerSeason)) / timePerSeason;
+        console.log(timePerGolem);
+    }
 }
 
 export function setup() {
