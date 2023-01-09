@@ -12,9 +12,9 @@ const slimeSheet: SpriteSheet = {
 };
 const slimeWalkFrameDuration = 100;
 const slimeWalkFrameCount = 5;
-function getSlimeWalkFrame(timestamp: number, direction: Direction) {
+function getSlimeWalkFrame(timestamp: number, direction: Direction, typeModifier = 0) {
     const x = Math.floor((timestamp % (slimeWalkFrameDuration * slimeWalkFrameCount)) / slimeWalkFrameDuration);
-    return [x, direction] as const;
+    return [x + typeModifier, direction] as const;
 }
 
 const golemSheet: SpriteSheet = {
@@ -48,6 +48,7 @@ const enemySheets = {
     [EnemyType.None]: slimeSheet,
     [EnemyType.Slime]: slimeSheet,
     [EnemyType.Golem]: golemSheet,
+    [EnemyType.BlueSlime]: slimeSheet,
 };
 
 export function drawEnemy(
@@ -66,6 +67,9 @@ export function drawEnemy(
             break;
         case EnemyType.Golem:
             drawSprite(context, sheet, x, y - sheet.spriteHeight / 3, getGolemWalkFrame(direction, timestamp));
+            break;
+        case EnemyType.BlueSlime:
+            drawSprite(context, sheet, x, y, getSlimeWalkFrame(direction, timestamp, 20));
             break;
     }
     if (health !== enemyHealthMaxes[enemyType]) {

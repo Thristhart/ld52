@@ -63,12 +63,14 @@ const spawnTiming = {
     [EnemyType.None]: 0,
     [EnemyType.Slime]: 1000,
     [EnemyType.Golem]: 30 * oneSecond,
+    [EnemyType.BlueSlime]: 1000,
 };
 
 const lastSpawns = {
     [EnemyType.None]: 0,
     [EnemyType.Slime]: 0,
     [EnemyType.Golem]: 0,
+    [EnemyType.BlueSlime]: 0,
 };
 
 const spawnableEnemies = new Set<keyof typeof lastSpawns>();
@@ -184,24 +186,68 @@ function addEnemy(type: EnemyType, x: number, y: number) {
     });
 }
 
+interface Milestone {
+    once?: (timestamp: number) => void;
+    during?: (timestamp: number) => void;
+    after?: (timestamp: number) => void;
+    isActive: (timestamp: number) => boolean;
+    hasBeenHit?: boolean;
+    isComplete?: boolean;
+}
+
+const milestones: Milestone[] = [
+    {
+        isActive: (timestamp) => timestamp > oneSecond * 5,
+        once: () => {
+            spawnableEnemies.add(EnemyType.Slime);
+        },
+    },
+    {
+        isActive: (timestamp) => timestamp > oneSecond * 10 && timestamp < oneMinute * 3,
+        during: (timestamp) => {
+            spawnTiming[EnemyType.Slime] = 1000 - (timestamp / (oneMinute * 3)) * 500;
+        },
+    },
+    {
+        // summer
+        isActive: (timestamp) => timestamp > timePerSeason,
+        once: () => {
+            spawnableEnemies.add(EnemyType.Golem);
+        },
+    },
+    {
+        isActive: (timestamp) => timestamp > timePerSeason && timestamp <= timePerSeason * 2,
+        once: (timestamp) => {
+            spawnTiming[EnemyType.Golem] =
+                30 * oneSecond - (20 * oneSecond * Math.min(timestamp - timePerSeason, timePerSeason)) / timePerSeason;
+        },
+    },
+    {
+        // autumn
+        isActive: (timestamp) => timestamp > timePerSeason * 2,
+        once: () => {
+            spawnableEnemies.add(EnemyType.BlueSlime);
+            spawnableEnemies.delete(EnemyType.Slime);
+            spawnTiming[EnemyType.BlueSlime] = spawnTiming[EnemyType.Slime];
+        },
+    },
+];
+
 function progression(timestamp: number) {
-    if (timestamp > oneSecond * 5) {
-        spawnableEnemies.add(EnemyType.Slime);
-    }
-    if (timestamp < oneSecond * 10) {
-        return;
-    }
-    if (timestamp < oneMinute * 3) {
-        spawnTiming[EnemyType.Slime] = 1000 - (timestamp / (oneMinute * 3)) * 500;
-    }
-    // summer
-    if (timestamp > timePerSeason) {
-        spawnableEnemies.add(EnemyType.Golem);
-    }
-    if (timestamp > timePerSeason && timestamp <= timePerSeason * 2) {
-        spawnTiming[EnemyType.Golem] =
-            30 * oneSecond - (20 * oneSecond * Math.min(timestamp - timePerSeason, timePerSeason)) / timePerSeason;
-    }
+    milestones.forEach((milestone) => {
+        const active = milestone.isActive(timestamp);
+        if (active && !milestone.hasBeenHit) {
+            milestone.once?.(timestamp);
+            milestone.hasBeenHit = true;
+        }
+        if (milestone.hasBeenHit) {
+            milestone.during?.(timestamp);
+        }
+        if (!active && milestone.hasBeenHit && !milestone.isComplete) {
+            milestone.isComplete = true;
+            milestone.after?.(timestamp);
+        }
+    });
 }
 
 export function setup() {
