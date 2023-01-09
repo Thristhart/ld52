@@ -21,6 +21,7 @@
         "comlink": "^4.3.1",
         "heap-js": "^2.2.0",
         "howler": "^2.2.3",
+        "microtip": "^0.2.2",
         "shepherd.js": "^11.0.1"
     }
 }

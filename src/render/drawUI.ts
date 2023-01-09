@@ -1,3 +1,4 @@
+import "microtip/microtip.css";
 import { gameWorker, lastGameState } from "~/gameWorkerWrapper";
 import { selectedTowerInfo } from "~/input";
 import { GameState } from "~/models/gameStateDescription";
@@ -60,6 +61,13 @@ function drawLeftSidebar() {
 
 const availableTowers = [TowerType.Corn, TowerType.Grape, TowerType.Coconut];
 
+const tooltips = {
+    [TowerType.None]: "How are you seeing this? What have you done?",
+    [TowerType.Corn]: "Fast, light attacks. A staple crop.",
+    [TowerType.Grape]: "Slow area attacks, with a refreshing taste.",
+    [TowerType.Coconut]: "Slow single-target attacks. Best served to larger targets.",
+};
+
 const towerlist = document.getElementById("towerlist") as HTMLUListElement;
 function drawSidebar() {
     availableTowers.forEach((type) => {
@@ -80,6 +88,9 @@ function drawSidebar() {
                 selectedTowerInfo.selectedTower = type;
                 selectedTowerInfo.inspectingTower = undefined;
             });
+            towerEntry.setAttribute("aria-label", tooltips[type]);
+            towerEntry.setAttribute("data-microtip-position", "left");
+            towerEntry.setAttribute("role", "tooltip");
             towerlist.appendChild(towerEntry);
         }
         if (lastGameState && towerCosts[type] > lastGameState.currency) {
