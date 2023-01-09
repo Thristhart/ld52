@@ -62,7 +62,6 @@ function onMouseMove(e: MouseEvent) {
     mouseGridPosition.y = Math.floor(y / tileSize);
 
     selectedTowerInfo.hoveredTower = overlapsWithTower(mouseGridPosition.x, mouseGridPosition.y);
-    console.log(mouseGridPosition.x, mouseGridPosition.y);
 
     findValidLocationForTower();
     isHovering = true;
