@@ -17,3 +17,5 @@ export const towerRadiuses = {
 };
 
 export const grapeAOEDuration = 500;
+
+export const moneyPerKill = 1;

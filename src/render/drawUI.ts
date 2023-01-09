@@ -1,7 +1,7 @@
 import { gameWorker, lastGameState } from "~/gameWorkerWrapper";
 import { selectedTowerInfo } from "~/input";
 import { GameState } from "~/models/gameStateDescription";
-import { towerCosts, TowerType } from "~/models/towers";
+import { moneyPerKill, towerCosts, TowerType } from "~/models/towers";
 
 const healthbar = document.getElementById("healthbar") as HTMLProgressElement;
 
@@ -51,7 +51,7 @@ function drawLeftSidebar() {
             inspectorContent.appendChild(content);
         }
         content.querySelector(".kills")?.setAttribute("data-kills", towerInfo.kills.toString());
-        content.querySelector(".sell")!.innerHTML = `Harvest for 💰${towerInfo.kills * 2}`;
+        content.querySelector(".sell")!.innerHTML = `Harvest for 💰${towerInfo.kills * moneyPerKill}`;
         content.setAttribute("data-tower", towerName);
     }
 }

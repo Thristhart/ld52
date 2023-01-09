@@ -17,3 +17,8 @@ TODO:
     -   A name for the game
 -   Enemies need healthbars X
 -   "Game Over" screen
+-   Cancel placement button. (Escape works for me but I don't think it's clear)
+
+# Balance
+
+-   Something to consume resources? (Lower income as a bandaid if not.)

@@ -9,7 +9,7 @@ import { enemyHealthMaxes, EnemyType } from "./models/enemies";
 import { AOEType } from "./models/gameStateDescription";
 import { spawnPoint, tileSize } from "./models/level";
 import { nextSeason } from "./models/season";
-import { grapeAOEDuration, towerCosts, TowerType } from "./models/towers";
+import { grapeAOEDuration, moneyPerKill, towerCosts, TowerType } from "./models/towers";
 
 export function getGameState() {
     return gameState;
@@ -37,7 +37,7 @@ export const sellTower = (towerId: number) => {
     if (!tower) {
         throw `Tried to sell non-existant tower ${towerId}`;
     }
-    const value = tower.kills * 2;
+    const value = tower.kills * moneyPerKill;
     gameState.towers.splice(gameState.towers.indexOf(tower), 1);
     gameState.currency += value;
 };
