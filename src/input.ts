@@ -62,6 +62,7 @@ function onMouseMove(e: MouseEvent) {
     mouseGridPosition.y = Math.floor(y / tileSize);
 
     selectedTowerInfo.hoveredTower = overlapsWithTower(mouseGridPosition.x, mouseGridPosition.y);
+    console.log(mouseGridPosition.x, mouseGridPosition.y);
 
     findValidLocationForTower();
     isHovering = true;
@@ -74,7 +75,7 @@ function overlapsWithTower(gridX: number, gridY: number) {
     for (const tower of lastGameState.towers) {
         const tX = Math.floor(tower.x / tileSize);
         const tY = Math.floor(tower.y / tileSize);
-        if (gridX - 1 <= tX + 1 && gridY - 1 <= tY + 1 && tX - 1 <= gridX + 1 && tY - 1 <= gridY + 1) {
+        if (gridX - 1 <= tX && gridY - 1 <= tY && tX - 1 <= gridX && tY - 1 <= gridY) {
             return tower.id;
         }
     }
@@ -96,10 +97,10 @@ function isLocationValidForTower(x: number, y: number) {
         [x, y + 1],
         [x + 1, y + 1],
     ]) {
-        if (!isTileAllowedTower(gridX, gridY)) {
+        if (overlapsWithTower(gridX, gridY) !== undefined) {
             return false;
         }
-        if (overlapsWithTower(gridX, gridY) !== undefined) {
+        if (!isTileAllowedTower(gridX, gridY)) {
             return false;
         }
     }
