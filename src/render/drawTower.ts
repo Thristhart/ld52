@@ -1,3 +1,4 @@
+import coconutSheetPath from "~/assets/images/coconut_no_shadow.png";
 import cornSheetPath from "~/assets/images/corn.png";
 import grapeSheetPath from "~/assets/images/grapes.png";
 import { tileSize } from "~/models/level";
@@ -23,6 +24,15 @@ function getGrapeGrowthFrame(growthStage: number) {
     return [growthStage, 0] as const;
 }
 
+const coconutSheet: SpriteSheet = {
+    image: loadImage(coconutSheetPath),
+    spriteWidth: 55,
+    spriteHeight: 97,
+};
+function getCoconutGrowthFrame(growthStage: number) {
+    return [growthStage, 0] as const;
+}
+
 export function drawTower(
     context: CanvasRenderingContext2D,
     x: number,
@@ -36,5 +46,13 @@ export function drawTower(
             return drawSprite(context, cornSheet, x, y - tileSize / 2, getCornGrowthFrame(growthStage));
         case TowerType.Grape:
             return drawSprite(context, grapeSheet, x, y - tileSize / 2, getGrapeGrowthFrame(growthStage));
+        case TowerType.Coconut:
+            return drawSprite(
+                context,
+                coconutSheet,
+                x,
+                y - tileSize / 2 - coconutSheet.spriteHeight / 4,
+                getCoconutGrowthFrame(growthStage)
+            );
     }
 }

@@ -9,7 +9,7 @@ export function projectileThink(gameState: GameState, projectile: Projectile, ti
             case ProjectileType.None:
                 gameState.projectiles.splice(gameState.projectiles.indexOf(projectile), 1);
                 return;
-            case ProjectileType.Corn:
+            case ProjectileType.Corn: {
                 const target = gameState.enemies.find((enemy) => enemy.id === projectile.targetId);
                 if (target) {
                     let kill = damageEnemy(gameState, target, 4);
@@ -22,6 +22,21 @@ export function projectileThink(gameState: GameState, projectile: Projectile, ti
                 }
                 gameState.projectiles.splice(gameState.projectiles.indexOf(projectile), 1);
                 return;
+            }
+            case ProjectileType.Coconut: {
+                const target = gameState.enemies.find((enemy) => enemy.id === projectile.targetId);
+                if (target) {
+                    let kill = damageEnemy(gameState, target, 25);
+                    if (kill) {
+                        let killer = gameState.towers.find((x) => x.id === projectile.sourceId);
+                        if (killer !== undefined) {
+                            killer.kills += 1;
+                        }
+                    }
+                }
+                gameState.projectiles.splice(gameState.projectiles.indexOf(projectile), 1);
+                return;
+            }
         }
     }
 }

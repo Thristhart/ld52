@@ -58,7 +58,7 @@ function drawLeftSidebar() {
     }
 }
 
-const availableTowers = [TowerType.Corn, TowerType.Grape];
+const availableTowers = [TowerType.Corn, TowerType.Grape, TowerType.Coconut];
 
 const towerlist = document.getElementById("towerlist") as HTMLUListElement;
 function drawSidebar() {

@@ -1,3 +1,4 @@
+import coconutProjectilePath from "~/assets/images/coconut_projectile.png";
 import hutSheetPath from "~/assets/images/defendPoint.png";
 import gameOverHousePath from "~/assets/images/game_over_house.png";
 import { startMusicForSeason } from "~/bgMusic";
@@ -6,7 +7,7 @@ import { isHovering, selectedTowerInfo, towerHoverPosition } from "~/input";
 import { lerp } from "~/lerp";
 import { PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint, levelHeight, levelWidth, tileSize } from "~/models/level";
-import { getProjectileProgress } from "~/models/projectile";
+import { getProjectileProgress, ProjectileType } from "~/models/projectile";
 import { Season } from "~/models/season";
 import { towerRadiuses } from "~/models/towers";
 import { drawAOE } from "./drawAOE";
@@ -30,6 +31,8 @@ const hutSheet: SpriteSheet = {
 };
 
 const gameOverHouse = loadImage(gameOverHousePath);
+
+const coconutProjectileImage = loadImage(coconutProjectilePath);
 
 function getHutVersion(season: Season) {
     switch (season) {
@@ -166,12 +169,24 @@ export const animationFrame = async (timestamp: number) => {
         if (!source) {
             continue;
         }
-        const projectileX = lerp(source.x, projectile.targetPoint.x, progress);
-        const projectileY = lerp(source.y, projectile.targetPoint.y, progress);
-        context.fillStyle = "gold";
-        context.beginPath();
-        context.arc(projectileX, projectileY, 3, 0, Math.PI * 2);
-        context.fill();
+
+        if (projectile.type === ProjectileType.Corn) {
+            const projectileX = lerp(source.x, projectile.targetPoint.x, progress);
+            const projectileY = lerp(source.y, projectile.targetPoint.y, progress);
+            context.fillStyle = "gold";
+            context.beginPath();
+            context.arc(projectileX, projectileY, 3, 0, Math.PI * 2);
+            context.fill();
+        }
+        if (projectile.type === ProjectileType.Coconut) {
+            const projectileX = lerp(source.x, projectile.targetPoint.x, progress);
+            const projectileY = lerp(source.y - 97 / 2, projectile.targetPoint.y, progress);
+            context.drawImage(
+                coconutProjectileImage,
+                projectileX - coconutProjectileImage.width / 2,
+                projectileY - coconutProjectileImage.height / 2
+            );
+        }
     }
 
     for (const aoe of state.aoes) {
