@@ -2,7 +2,7 @@ import coconutProjectilePath from "~/assets/images/coconut_projectile.png";
 import hutSheetPath from "~/assets/images/defendPoint.png";
 import gameOverHousePath from "~/assets/images/game_over_house.png";
 import victoryPath from "~/assets/images/victory.png";
-import { startFailureMusic, startMusicForSeason } from "~/bgMusic";
+import { startFailureMusic, startMusicForSeason, startVictoryMusic } from "~/bgMusic";
 import { getGameState } from "~/gameWorkerWrapper";
 import { isHovering, selectedTowerInfo, towerHoverPosition } from "~/input";
 import { lerp } from "~/lerp";
@@ -71,6 +71,7 @@ export const animationFrame = async (timestamp: number) => {
     }
 
     if (state.hasWon) {
+        startVictoryMusic();
         context.font = "42px sans-serif";
         context.drawImage(victory, 0, 0, canvas.width, canvas.height);
         context.fillText("You made it through the year!", 140, canvas.height - 16);
