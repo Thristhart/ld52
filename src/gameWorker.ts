@@ -258,7 +258,7 @@ function progression(timestamp: number) {
             milestone.once?.(timestamp);
             milestone.hasBeenHit = true;
         }
-        if (milestone.hasBeenHit) {
+        if (active) {
             milestone.during?.(timestamp);
         }
         if (!active && milestone.hasBeenHit && !milestone.isComplete) {
