@@ -40,8 +40,8 @@ function drawLeftSidebar() {
             image.className = "image";
             const sellButton = document.createElement("button");
             sellButton.className = "sell";
-            sellButton.addEventListener("click", () => {
-                gameWorker.sellTower(towerInfo.id);
+            sellButton.addEventListener("click", (e) => {
+                gameWorker.sellTower(parseInt((e.target as HTMLButtonElement).dataset.towerid!));
                 selectedTowerInfo.inspectingTower = undefined;
             });
             content.appendChild(image);
@@ -52,6 +52,7 @@ function drawLeftSidebar() {
         }
         content.querySelector(".kills")?.setAttribute("data-kills", towerInfo.kills.toString());
         content.querySelector(".sell")!.innerHTML = `Harvest for 💰${towerInfo.kills * moneyPerKill}`;
+        content.querySelector(".sell")!.setAttribute("data-towerid", towerInfo.id.toString());
         content.setAttribute("data-tower", towerName);
     }
 }
