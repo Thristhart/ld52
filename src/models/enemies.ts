@@ -3,6 +3,8 @@ export enum EnemyType {
     Slime = 1,
     Golem = 2,
     BlueSlime = 3,
+    KnightMounted = 4,
+    Knight = 5,
 }
 
 export const enemyHealthMaxes = {
@@ -10,6 +12,8 @@ export const enemyHealthMaxes = {
     [EnemyType.Slime]: 10,
     [EnemyType.Golem]: 200,
     [EnemyType.BlueSlime]: 12,
+    [EnemyType.KnightMounted]: 32,
+    [EnemyType.Knight]: 1000,
 };
 
 export const enemySpeeds = {
@@ -17,6 +21,8 @@ export const enemySpeeds = {
     [EnemyType.Slime]: 1,
     [EnemyType.Golem]: 0.5,
     [EnemyType.BlueSlime]: 1.2,
+    [EnemyType.KnightMounted]: 2,
+    [EnemyType.Knight]: 0.25,
 };
 
 export const enemyDamage = {
@@ -24,4 +30,6 @@ export const enemyDamage = {
     [EnemyType.Slime]: 1,
     [EnemyType.Golem]: 3,
     [EnemyType.BlueSlime]: 1,
+    [EnemyType.KnightMounted]: 15,
+    [EnemyType.Knight]: 5,
 };

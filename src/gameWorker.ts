@@ -61,9 +61,10 @@ const oneMinute = oneSecond * 60;
 
 const spawnTiming = {
     [EnemyType.None]: 0,
-    [EnemyType.Slime]: 1000,
+    [EnemyType.Slime]: oneSecond,
     [EnemyType.Golem]: 30 * oneSecond,
-    [EnemyType.BlueSlime]: 1000,
+    [EnemyType.BlueSlime]: oneSecond,
+    [EnemyType.KnightMounted]: 6 * oneSecond,
 };
 
 const lastSpawns = {
@@ -71,6 +72,7 @@ const lastSpawns = {
     [EnemyType.Slime]: 0,
     [EnemyType.Golem]: 0,
     [EnemyType.BlueSlime]: 0,
+    [EnemyType.KnightMounted]: 0,
 };
 
 const spawnableEnemies = new Set<keyof typeof lastSpawns>();
@@ -174,7 +176,7 @@ async function doGameLogic(timestamp: number) {
 
 let lastEntId = -1;
 
-function addEnemy(type: EnemyType, x: number, y: number) {
+export function addEnemy(type: EnemyType, x: number, y: number) {
     gameState.enemies.push({
         x,
         y,
@@ -229,6 +231,13 @@ const milestones: Milestone[] = [
             spawnableEnemies.add(EnemyType.BlueSlime);
             spawnableEnemies.delete(EnemyType.Slime);
             spawnTiming[EnemyType.BlueSlime] = spawnTiming[EnemyType.Slime];
+        },
+    },
+    {
+        // winter
+        isActive: (timestamp) => timestamp > timePerSeason * 3,
+        once: () => {
+            spawnableEnemies.add(EnemyType.KnightMounted);
         },
     },
 ];

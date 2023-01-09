@@ -1,3 +1,5 @@
+import knightSheetPath from "~/assets/images/knight.png";
+import knightMountedSheetPath from "~/assets/images/knight_mounted.png";
 import golemSheetPath from "~/assets/images/monster_golem1.png";
 import slimeSheetPath from "~/assets/images/slimes.png";
 import { Direction } from "~/models/direction";
@@ -44,11 +46,69 @@ function getGolemWalkFrame(timestamp: number, direction: Direction) {
     return [x, directionIndex] as const;
 }
 
+const knightMountedSheet: SpriteSheet = {
+    image: loadImage(knightMountedSheetPath),
+    spriteWidth: 60,
+    spriteHeight: 64,
+};
+const knightMountedFrameDuration = 300;
+const knightMountedFrameCount = 3;
+function getKnightMountedWalkFrame(timestamp: number, direction: Direction) {
+    let directionIndex = 0;
+    switch (direction) {
+        case Direction.Down:
+            directionIndex = 0;
+            break;
+        case Direction.Left:
+            directionIndex = 1;
+            break;
+        case Direction.Right:
+            directionIndex = 2;
+            break;
+        case Direction.Up:
+            directionIndex = 3;
+            break;
+    }
+    const x = Math.floor(
+        (timestamp % (knightMountedFrameDuration * knightMountedFrameCount)) / knightMountedFrameDuration
+    );
+    return [x, directionIndex] as const;
+}
+
+const knightSheet: SpriteSheet = {
+    image: loadImage(knightSheetPath),
+    spriteWidth: 47,
+    spriteHeight: 50,
+};
+const knightFrameDuration = 300;
+const knightFrameCount = 3;
+function getKnightWalkFrame(timestamp: number, direction: Direction) {
+    let directionIndex = 0;
+    switch (direction) {
+        case Direction.Down:
+            directionIndex = 0;
+            break;
+        case Direction.Left:
+            directionIndex = 1;
+            break;
+        case Direction.Right:
+            directionIndex = 2;
+            break;
+        case Direction.Up:
+            directionIndex = 3;
+            break;
+    }
+    const x = Math.floor((timestamp % (knightFrameDuration * knightFrameCount)) / knightFrameDuration);
+    return [x, directionIndex] as const;
+}
+
 const enemySheets = {
     [EnemyType.None]: slimeSheet,
     [EnemyType.Slime]: slimeSheet,
     [EnemyType.Golem]: golemSheet,
     [EnemyType.BlueSlime]: slimeSheet,
+    [EnemyType.KnightMounted]: knightMountedSheet,
+    [EnemyType.Knight]: knightSheet,
 };
 
 export function drawEnemy(
@@ -70,6 +130,12 @@ export function drawEnemy(
             break;
         case EnemyType.BlueSlime:
             drawSprite(context, sheet, x, y, getSlimeWalkFrame(direction, timestamp, 20));
+            break;
+        case EnemyType.KnightMounted:
+            drawSprite(context, sheet, x, y - sheet.spriteHeight / 3, getKnightMountedWalkFrame(direction, timestamp));
+            break;
+        case EnemyType.Knight:
+            drawSprite(context, sheet, x, y - sheet.spriteHeight / 3, getKnightWalkFrame(direction, timestamp));
             break;
     }
     if (health !== enemyHealthMaxes[enemyType]) {

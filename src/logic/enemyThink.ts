@@ -1,6 +1,7 @@
+import { addEnemy } from "~/gameWorker";
 import { lerp } from "~/lerp";
 import { Direction } from "~/models/direction";
-import { enemyDamage, enemySpeeds } from "~/models/enemies";
+import { enemyDamage, enemySpeeds, EnemyType } from "~/models/enemies";
 import { Enemy, GameState, PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint } from "~/models/level";
 import { pathToPoint } from "./pathfinding";
@@ -93,6 +94,9 @@ function distanceFromDistances(dx: number, dy: number) {
 export function damageEnemy(gameState: GameState, enemy: Enemy, damage: number) {
     enemy.health -= damage;
     if (enemy.health <= 0) {
+        if (enemy.type === EnemyType.KnightMounted) {
+            addEnemy(EnemyType.Knight, enemy.x, enemy.y);
+        }
         gameState.enemies.splice(gameState.enemies.indexOf(enemy), 1);
         return true;
     }
