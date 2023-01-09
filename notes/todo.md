@@ -5,7 +5,7 @@ TODO:
 -   Currency X
 -   Towers cost money X
     -   Towers show when they're not affordable. X
--   Towers track number of kills
+-   Towers track number of kills X
 -   Towers can be inspected X
 -   Towers show radius
 -   Towers can be sold for an amount based on kill count
