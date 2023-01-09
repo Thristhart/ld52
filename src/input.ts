@@ -32,6 +32,12 @@ function onClick() {
     }
 }
 
+function onContextMenu(e: MouseEvent) {
+    e.preventDefault();
+    selectedTowerInfo.inspectingTower = undefined;
+    selectedTowerInfo.selectedTower = undefined;
+}
+
 export const mousePosition = { x: 0, y: 0 };
 export const mouseGridPosition = { x: 0, y: 0 };
 export let isHovering = false;
@@ -148,6 +154,7 @@ function onMouseLeave() {
 
 export function setupListeners() {
     canvas.addEventListener("click", onClick);
+    canvas.addEventListener("contextmenu", onContextMenu);
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseleave", onMouseLeave);
     document.body.addEventListener("keydown", onKeyDown);
@@ -156,6 +163,7 @@ export function setupListeners() {
 if (import.meta.hot) {
     import.meta.hot.dispose(() => {
         canvas.removeEventListener("click", onClick);
+        canvas.removeEventListener("contextmenu", onContextMenu);
         canvas.removeEventListener("mousemove", onMouseMove);
         canvas.removeEventListener("mouseleave", onMouseLeave);
         document.body.removeEventListener("keydown", onKeyDown);
