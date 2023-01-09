@@ -67,9 +67,12 @@ export const animationFrame = async (timestamp: number) => {
         if (enemy.path?.[0]?.type === PathNodeType.Empty) {
             return;
         }
+        context.strokeStyle = "black";
+        context.globalAlpha = enemy.path.findIndex((node) => node.type === PathNodeType.Upcoming) / 40;
         context.beginPath();
         context.moveTo(enemy.x, enemy.y);
-        for (const pathNode of enemy.path) {
+        for (let i = 0; i < enemy.path.length; i++) {
+            const pathNode = enemy.path[i];
             if (pathNode.type === PathNodeType.Empty) {
                 break;
             }
@@ -79,6 +82,7 @@ export const animationFrame = async (timestamp: number) => {
         }
         context.stroke();
     });
+    context.globalAlpha = 1;
 
     for (const enemy of state.enemies) {
         if (enemy.type === 0) {
