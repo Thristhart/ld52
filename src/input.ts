@@ -2,6 +2,7 @@ import { gameWorker, lastGameState } from "~/gameWorkerWrapper";
 import { canvas } from "~/render/renderLoop";
 import { isTileAllowedTower, tileSize } from "./models/level";
 import { towerCosts, TowerType } from "./models/towers";
+import { availableTowers } from "./render/drawUI";
 
 function onClick() {
     if (lastGameState && lastGameState.playerHealth <= 0) {
@@ -52,6 +53,12 @@ function onKeyDown(e: KeyboardEvent) {
     } else if (e.key === "s" || e.key === "h" || e.key === "S" || e.key === "H") {
         if (selectedTowerInfo.inspectingTower !== undefined) {
             gameWorker.sellTower(selectedTowerInfo.inspectingTower);
+            selectedTowerInfo.inspectingTower = undefined;
+        }
+    } else if (e.key === "1" || e.key === "2" || e.key === "3") {
+        const type = availableTowers[parseInt(e.key) - 1];
+        if (lastGameState && towerCosts[type as keyof typeof towerCosts] <= lastGameState.currency) {
+            selectedTowerInfo.selectedTower = type;
             selectedTowerInfo.inspectingTower = undefined;
         }
     }

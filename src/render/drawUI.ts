@@ -61,7 +61,7 @@ function drawLeftSidebar() {
     }
 }
 
-const availableTowers = [TowerType.Corn, TowerType.Grape, TowerType.Coconut];
+export const availableTowers = [TowerType.Corn, TowerType.Grape, TowerType.Coconut];
 
 const tooltips = {
     [TowerType.None]: "How are you seeing this? What have you done?",
