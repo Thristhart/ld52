@@ -3,7 +3,6 @@ import { startMusicForSeason } from "~/bgMusic";
 import { getGameState } from "~/gameWorkerWrapper";
 import { isHovering, selectedTowerInfo, towerHoverPosition } from "~/input";
 import { lerp } from "~/lerp";
-import { Direction } from "~/models/direction";
 import { PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint, levelHeight, levelWidth, tileSize } from "~/models/level";
 import { getProjectileProgress } from "~/models/projectile";
@@ -81,12 +80,11 @@ export const animationFrame = async (timestamp: number) => {
         context.stroke();
     });
 
-    // TODO: enemy direction as they move
     for (const enemy of state.enemies) {
         if (enemy.type === 0) {
             break;
         }
-        drawEnemy(context, enemy.x, enemy.y, enemy.type, enemy.health, timestamp, Direction.Right);
+        drawEnemy(context, enemy.x, enemy.y, enemy.type, enemy.health, timestamp, enemy.direction);
     }
 
     // TODO: sort by y to ensure overlap is correct

@@ -1,4 +1,5 @@
 import { lerp } from "~/lerp";
+import { Direction } from "~/models/direction";
 import { Enemy, GameState, PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint } from "~/models/level";
 import { pathToPoint } from "./pathfinding";
@@ -59,6 +60,20 @@ export const enemyThink = async (gameState: GameState, enemy: Enemy) => {
     const dx = nextTarget.x - enemy.x;
     const dy = nextTarget.y - enemy.y;
     const distance = distanceFromDistances(dx, dy);
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 0) {
+            enemy.direction = Direction.Right;
+        } else {
+            enemy.direction = Direction.Left;
+        }
+    } else {
+        if (dy > 0) {
+            enemy.direction = Direction.Down;
+        } else {
+            enemy.direction = Direction.Up;
+        }
+    }
 
     if (distance < enemySpeed * 1.2) {
         path[nextTargetIndex].type = PathNodeType.Visited;

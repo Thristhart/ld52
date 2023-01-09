@@ -4,7 +4,8 @@ import { gameState } from "./logic/gameState";
 import { projectileThink } from "./logic/projectileThink";
 import { enemyQuadtree, towerQuadtree } from "./logic/quadtree";
 import { towerThink } from "./logic/towerThink";
-import { EnemyType } from "./models/enemies";
+import { Direction } from "./models/direction";
+import { enemyHealthMaxes, EnemyType } from "./models/enemies";
 import { AOEType } from "./models/gameStateDescription";
 import { spawnPoint, tileSize } from "./models/level";
 import { nextSeason } from "./models/season";
@@ -59,7 +60,7 @@ let lastSeasonTime = 0;
 
 const timePerSeason = 300000;
 
-const timePerEnemy = 500;
+let timePerEnemy = 500;
 
 async function doGameLogic(timestamp: number) {
     towerQuadtree.clear();
@@ -150,7 +151,8 @@ function addEnemy(type: EnemyType, x: number, y: number) {
         x,
         y,
         type,
-        health: 10,
+        health: enemyHealthMaxes[type],
+        direction: Direction.Down,
         id: lastEntId++,
         path: [],
     });
