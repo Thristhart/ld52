@@ -27,17 +27,19 @@ export function drawEnemy(
 ) {
     switch (enemyType) {
         case EnemyType.Slime:
-            let width = slimeSheet.spriteWidth,
-                height = slimeSheet.spriteHeight;
-            context.save();
-            context.fillStyle = "red";
-            context.fillRect(
-                x - width / 2,
-                y - height / 2 + 1,
-                (health / enemyHealthMaxes[EnemyType.Slime]) * slimeSheet.spriteWidth,
-                1
-            );
-            context.restore();
+            if (health !== enemyHealthMaxes[EnemyType.Slime]) {
+                const width = slimeSheet.spriteWidth;
+                const height = slimeSheet.spriteHeight;
+                context.save();
+                context.fillStyle = "red";
+                context.fillRect(
+                    x - width / 2,
+                    y - height / 2 + 1,
+                    (health / enemyHealthMaxes[EnemyType.Slime]) * slimeSheet.spriteWidth,
+                    2
+                );
+                context.restore();
+            }
             return drawSprite(context, slimeSheet, x, y, getSlimeWalkFrame(direction, timestamp));
     }
 }
