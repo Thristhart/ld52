@@ -8,7 +8,12 @@ function onClick() {
         selectedTowerInfo.inspectingTower = selectedTowerInfo.hoveredTower;
         selectedTowerInfo.selectedTower = TowerType.None;
     } else if (selectedTowerInfo.selectedTower && towerHoverPosition) {
-        gameWorker.placeTower(selectedTowerInfo.selectedTower, towerHoverPosition.x, towerHoverPosition.y);
+        gameWorker.placeTower(
+            selectedTowerInfo.selectedTower,
+            towerHoverPosition.x,
+            towerHoverPosition.y,
+            lastGameState!.gametime
+        );
         if (
             lastGameState &&
             towerCosts[selectedTowerInfo.selectedTower] >

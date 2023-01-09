@@ -16,7 +16,7 @@ export function getGameState() {
 }
 
 let lastTowerId = -1;
-export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
+export const placeTower = (type: TowerType, gridX: number, gridY: number, gametime: number) => {
     if (gameState.currency >= towerCosts[type]) {
         gameState.currency -= towerCosts[type];
         gameState.towers.push({
@@ -24,7 +24,7 @@ export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
             x: gridX * tileSize + tileSize / 2,
             y: gridY * tileSize + tileSize / 2,
             id: lastTowerId++,
-            lastGrowthTime: performance.now(),
+            lastGrowthTime: gametime,
             growthStage: 0,
             lastShootTime: 0,
             kills: 0,
@@ -44,13 +44,14 @@ export const sellTower = (towerId: number) => {
 
 const millisecondsPerTick = 16;
 
+let startTimestamp = performance.now();
 let lastTickTime = performance.now();
 async function tick() {
     const now = performance.now();
     let dt = now - lastTickTime;
     while (dt >= millisecondsPerTick) {
         lastTickTime = now;
-        await doGameLogic(now);
+        await doGameLogic(now - startTimestamp);
         dt -= millisecondsPerTick;
     }
 }
@@ -60,7 +61,7 @@ let lastSeasonTime = 0;
 
 const timePerSeason = 300000;
 
-let timePerEnemy = 500;
+let timePerEnemy = 1000;
 
 async function doGameLogic(timestamp: number) {
     towerQuadtree.clear();
@@ -141,6 +142,8 @@ async function doGameLogic(timestamp: number) {
         lastSeasonTime = timestamp;
     }
 
+    progression(timestamp);
+
     gameState.gametime = timestamp;
 }
 
@@ -158,13 +161,20 @@ function addEnemy(type: EnemyType, x: number, y: number) {
     });
 }
 
-function setup() {
-    lastEnemyTime = performance.now();
-    addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
-    gameState.playerHealth = 100;
-    gameState.currency = 50;
+const oneSecond = 1000;
+const oneMinute = oneSecond * 60;
 
-    setInterval(tick);
+function progression(timestamp: number) {
+    if (timestamp < oneSecond * 10) {
+        return;
+    }
+    if (timestamp < oneMinute * 3) {
+        timePerEnemy = 1000 - (timestamp / (oneMinute * 3)) * 500;
+    }
 }
 
-setup();
+export function setup() {
+    startTimestamp = performance.now();
+    lastTickTime = startTimestamp;
+    setInterval(tick);
+}
