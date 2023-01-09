@@ -1,6 +1,6 @@
 import slimeSheetPath from "~/assets/images/slimes.png";
 import { Direction } from "~/models/direction";
-import { EnemyType } from "~/models/enemies";
+import { enemyHealthMaxes, EnemyType } from "~/models/enemies";
 import { drawSprite, SpriteSheet } from "./drawSprite";
 import { loadImage } from "./loadImage";
 
@@ -21,11 +21,23 @@ export function drawEnemy(
     x: number,
     y: number,
     enemyType: EnemyType,
+    health: number,
     direction: Direction,
     timestamp: number
 ) {
     switch (enemyType) {
         case EnemyType.Slime:
+            let width = slimeSheet.spriteWidth,
+                height = slimeSheet.spriteHeight;
+            context.save();
+            context.fillStyle = "red";
+            context.fillRect(
+                x - width / 2,
+                y - height / 2 + 1,
+                (health / enemyHealthMaxes[EnemyType.Slime]) * slimeSheet.spriteWidth,
+                1
+            );
+            context.restore();
             return drawSprite(context, slimeSheet, x, y, getSlimeWalkFrame(direction, timestamp));
     }
 }

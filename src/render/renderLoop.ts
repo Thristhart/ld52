@@ -85,7 +85,7 @@ export const animationFrame = async (timestamp: number) => {
         if (enemy.type === 0) {
             break;
         }
-        drawEnemy(context, enemy.x, enemy.y, enemy.type, timestamp, Direction.Right);
+        drawEnemy(context, enemy.x, enemy.y, enemy.type, enemy.health, timestamp, Direction.Right);
     }
 
     // TODO: sort by y to ensure overlap is correct
