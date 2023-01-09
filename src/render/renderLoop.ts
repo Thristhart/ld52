@@ -8,6 +8,7 @@ import { PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint, levelHeight, levelWidth, tileSize } from "~/models/level";
 import { getProjectileProgress } from "~/models/projectile";
 import { Season } from "~/models/season";
+import { towerRadiuses } from "~/models/towers";
 import { drawAOE } from "./drawAOE";
 import { drawEnemy } from "./drawEnemies";
 import { drawSprite, SpriteSheet } from "./drawSprite";
@@ -92,10 +93,16 @@ export const animationFrame = async (timestamp: number) => {
     state.towers.forEach((tower) => {
         if (selectedTowerInfo.inspectingTower === tower.id) {
             context.strokeStyle = "black";
-            context.strokeRect(tower.x - tileSize, tower.y - tileSize, tileSize * 3, tileSize * 3);
+            context.strokeRect(tower.x - tileSize * 1.5, tower.y - tileSize * 1.5, tileSize * 3, tileSize * 3);
+            context.beginPath();
+            context.arc(tower.x, tower.y, towerRadiuses[tower.type], 0, Math.PI * 2);
+            context.stroke();
         } else if (selectedTowerInfo.hoveredTower === tower.id) {
             context.strokeStyle = "silver";
-            context.strokeRect(tower.x - tileSize, tower.y - tileSize, tileSize * 3, tileSize * 3);
+            context.strokeRect(tower.x - tileSize * 1.5, tower.y - tileSize * 1.5, tileSize * 3, tileSize * 3);
+            context.beginPath();
+            context.arc(tower.x, tower.y, towerRadiuses[tower.type], 0, Math.PI * 2);
+            context.stroke();
         }
         drawTower(context, tower.x, tower.y, tower.type, tower.growthStage, timestamp);
     });
@@ -111,12 +118,21 @@ export const animationFrame = async (timestamp: number) => {
         );
         drawTower(
             context,
-            towerHoverPosition.x * tileSize,
-            towerHoverPosition.y * tileSize,
+            towerHoverPosition.x * tileSize + tileSize / 2,
+            towerHoverPosition.y * tileSize + tileSize / 2,
             selectedTowerInfo.selectedTower,
             5,
             timestamp
         );
+        context.beginPath();
+        context.arc(
+            towerHoverPosition.x * tileSize + tileSize / 2,
+            towerHoverPosition.y * tileSize + tileSize / 2,
+            towerRadiuses[selectedTowerInfo.selectedTower],
+            0,
+            Math.PI * 2
+        );
+        context.stroke();
         context.globalAlpha = 1;
     }
 

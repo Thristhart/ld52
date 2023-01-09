@@ -20,8 +20,8 @@ export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
         gameState.currency -= towerCosts[type];
         gameState.towers.push({
             type,
-            x: gridX * tileSize,
-            y: gridY * tileSize,
+            x: gridX * tileSize + tileSize / 2,
+            y: gridY * tileSize + tileSize / 2,
             id: lastTowerId++,
             lastGrowthTime: performance.now(),
             growthStage: 0,

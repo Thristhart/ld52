@@ -1,5 +1,6 @@
 import cornSheetPath from "~/assets/images/corn.png";
 import grapeSheetPath from "~/assets/images/grapes.png";
+import { tileSize } from "~/models/level";
 import { TowerType } from "~/models/towers";
 import { drawSprite, SpriteSheet } from "./drawSprite";
 import { loadImage } from "./loadImage";
@@ -32,8 +33,8 @@ export function drawTower(
 ) {
     switch (towerType) {
         case TowerType.Corn:
-            return drawSprite(context, cornSheet, x + cornSheet.spriteWidth / 4, y, getCornGrowthFrame(growthStage));
+            return drawSprite(context, cornSheet, x, y - tileSize / 2, getCornGrowthFrame(growthStage));
         case TowerType.Grape:
-            return drawSprite(context, grapeSheet, x + grapeSheet.spriteWidth / 4, y, getGrapeGrowthFrame(growthStage));
+            return drawSprite(context, grapeSheet, x, y - tileSize / 2, getGrapeGrowthFrame(growthStage));
     }
 }

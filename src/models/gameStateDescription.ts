@@ -1,3 +1,5 @@
+import { TowerType } from "./towers";
+
 export interface PathNode {
     type: number;
     x: number;
@@ -20,7 +22,7 @@ export interface Enemy {
 }
 
 export interface Tower {
-    type: number;
+    type: TowerType;
     id: number;
     x: number;
     y: number;

@@ -7,7 +7,7 @@ function onClick() {
     if (selectedTowerInfo.hoveredTower !== undefined) {
         selectedTowerInfo.inspectingTower = selectedTowerInfo.hoveredTower;
         selectedTowerInfo.selectedTower = TowerType.None;
-    } else if (towerHoverPosition) {
+    } else if (selectedTowerInfo.selectedTower && towerHoverPosition) {
         gameWorker.placeTower(selectedTowerInfo.selectedTower, towerHoverPosition.x, towerHoverPosition.y);
         if (
             lastGameState &&

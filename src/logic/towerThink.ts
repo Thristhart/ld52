@@ -1,17 +1,15 @@
 import { Circle } from "@timohausmann/quadtree-ts";
 import { AOEType, GameState, Tower } from "~/models/gameStateDescription";
 import { cornProjectileDuration, ProjectileType } from "~/models/projectile";
-import { TowerType } from "~/models/towers";
+import { towerRadiuses, TowerType } from "~/models/towers";
 import { damageEnemy, predictEnemyLocation } from "./enemyThink";
 import { enemyQuadtree } from "./quadtree";
 
 const growthDuration = 300;
 
 const cornFireDuration = 1000;
-const cornFireRadius = 100;
 
 const grapeFireDuration = 2000;
-const grapeFireRadius = 48;
 
 function circleCollision(circleA: Circle<unknown>, circleB: Circle<unknown>) {
     const dx = circleA.x - circleB.x;
@@ -30,7 +28,7 @@ export async function towerThink(gameState: GameState, tower: Tower, timestamp: 
                 return;
             }
             if (timestamp - tower.lastShootTime > cornFireDuration) {
-                const firingBounds = new Circle<number>({ x: tower.x, y: tower.y, r: cornFireRadius });
+                const firingBounds = new Circle<number>({ x: tower.x, y: tower.y, r: towerRadiuses[tower.type] });
                 const potentialEnemies = enemyQuadtree
                     .retrieve(firingBounds)
                     .filter((enemy) => circleCollision(enemy, firingBounds))
@@ -60,7 +58,7 @@ export async function towerThink(gameState: GameState, tower: Tower, timestamp: 
             }
 
             if (timestamp - tower.lastShootTime > grapeFireDuration) {
-                const firingBounds = new Circle<number>({ x: tower.x, y: tower.y, r: grapeFireRadius });
+                const firingBounds = new Circle<number>({ x: tower.x, y: tower.y, r: towerRadiuses[tower.type] });
                 const potentialEnemies = enemyQuadtree
                     .retrieve(firingBounds)
                     .filter((enemy) => circleCollision(enemy, firingBounds));
@@ -83,7 +81,7 @@ export async function towerThink(gameState: GameState, tower: Tower, timestamp: 
                         startTimestamp: timestamp,
                         x: tower.x,
                         y: tower.y,
-                        radius: grapeFireRadius,
+                        radius: towerRadiuses[tower.type],
                     });
                     tower.lastShootTime = timestamp;
                 }
