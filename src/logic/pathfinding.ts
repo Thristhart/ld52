@@ -1,6 +1,8 @@
 import { Rectangle } from "@timohausmann/quadtree-ts";
 import Heap from "heap-js";
 import { isTilePathable, levelHeight, levelWidth, tileSize } from "~/models/level";
+import { TowerType } from "~/models/towers";
+import { gameState } from "./gameState";
 import { towerQuadtree } from "./quadtree";
 
 export interface Point {
@@ -118,7 +120,14 @@ function AABBCollision(rectA: Rectangle<unknown>, rectB: Rectangle<unknown>) {
     );
 }
 
-const towerWeight = 1;
+function getTowerWeight(type: TowerType) {
+    switch (type) {
+        case TowerType.Grape:
+            return 2;
+        default:
+            return 1;
+    }
+}
 
 export function pathToPoint(from: Point, to: Point) {
     const startNode = getNodeAtPoint(from);
@@ -165,8 +174,9 @@ export function pathToPoint(from: Point, to: Point) {
             const nearby = towerQuadtree.retrieve(bounds);
             let weightFromTowers = 0;
             for (const nearbyNode of nearby) {
-                if (AABBCollision(nearbyNode, bounds)) {
-                    weightFromTowers += towerWeight;
+                const tower = gameState.towers.find((t) => t.id === nearbyNode.data);
+                if (tower && AABBCollision(nearbyNode, bounds)) {
+                    weightFromTowers += getTowerWeight(tower.type);
                 }
             }
             weight += weightFromTowers;

@@ -9,7 +9,7 @@ import { enemyHealthMaxes, EnemyType } from "./models/enemies";
 import { AOEType } from "./models/gameStateDescription";
 import { spawnPoint, tileSize } from "./models/level";
 import { nextSeason, timePerSeason } from "./models/season";
-import { grapeAOEDuration, moneyPerKill, towerCosts, TowerType } from "./models/towers";
+import { grapeAOEDuration, moneyPerKill, towerCosts, towerRadiuses, TowerType } from "./models/towers";
 
 export function getGameState() {
     return gameState;
@@ -91,12 +91,13 @@ async function doGameLogic(timestamp: number) {
         if (!tower.type) {
             continue;
         }
+        const radius = towerRadiuses[tower.type];
         towerQuadtree.insert(
             new Rectangle({
-                x: tower.x - tileSize * 1.5,
-                y: tower.y - tileSize * 1.5,
-                width: tileSize * 3,
-                height: tileSize * 3,
+                x: tower.x - radius,
+                y: tower.y - radius,
+                width: radius * 2,
+                height: radius * 2,
                 data: tower.id,
             })
         );
