@@ -1,4 +1,5 @@
 import hutSheetPath from "~/assets/images/defendPoint.png";
+import gameOverHousePath from "~/assets/images/game_over_house.png";
 import { startMusicForSeason } from "~/bgMusic";
 import { getGameState } from "~/gameWorkerWrapper";
 import { isHovering, selectedTowerInfo, towerHoverPosition } from "~/input";
@@ -28,6 +29,8 @@ const hutSheet: SpriteSheet = {
     spriteHeight: 78,
 };
 
+const gameOverHouse = loadImage(gameOverHousePath);
+
 function getHutVersion(season: Season) {
     switch (season) {
         default:
@@ -47,6 +50,20 @@ export const animationFrame = async (timestamp: number) => {
         return;
     }
 
+    canvas.width = tileSize * levelWidth;
+    canvas.height = tileSize * levelHeight;
+    context.imageSmoothingEnabled = false;
+
+    context.save();
+
+    if (state.playerHealth <= 0) {
+        context.font = "60px sans-serif";
+        context.fillText("Game Over :(", 220, 200);
+        context.drawImage(gameOverHouse, canvas.width / 2 - 150, canvas.height / 2 - 150, 300, 300);
+        context.fillText("Click to try again", 160, 620);
+        return;
+    }
+
     if (previousSeason === undefined) {
         previousSeason = Season.Spring;
     }
@@ -55,12 +72,6 @@ export const animationFrame = async (timestamp: number) => {
     }
     previousSeason = state.season;
 
-    canvas.width = tileSize * levelWidth;
-    canvas.height = tileSize * levelHeight;
-
-    context.save();
-
-    context.imageSmoothingEnabled = false;
     context.drawImage(levelBackgrounds[state.season], 0, 0);
 
     state.enemies.forEach((enemy) => {

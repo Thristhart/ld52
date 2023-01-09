@@ -4,6 +4,10 @@ import { isTileAllowedTower, tileSize } from "./models/level";
 import { towerCosts, TowerType } from "./models/towers";
 
 function onClick() {
+    if (lastGameState && lastGameState.playerHealth <= 0) {
+        location.reload();
+        return;
+    }
     if (selectedTowerInfo.hoveredTower !== undefined) {
         selectedTowerInfo.inspectingTower = selectedTowerInfo.hoveredTower;
         selectedTowerInfo.selectedTower = TowerType.None;

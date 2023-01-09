@@ -64,6 +64,9 @@ const timePerSeason = 300000;
 let timePerEnemy = 1000;
 
 async function doGameLogic(timestamp: number) {
+    if (gameState.playerHealth <= 0) {
+        return;
+    }
     towerQuadtree.clear();
     enemyQuadtree.clear();
     for (let i = 0; i < gameState.enemies.length; i++) {
