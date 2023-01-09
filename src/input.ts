@@ -19,6 +19,7 @@ function onClick() {
             towerHoverPosition.y,
             lastGameState!.gametime
         );
+        towerHoverPosition = undefined;
         if (
             lastGameState &&
             towerCosts[selectedTowerInfo.selectedTower] >
@@ -35,7 +36,7 @@ function onClick() {
 function onContextMenu(e: MouseEvent) {
     e.preventDefault();
     selectedTowerInfo.inspectingTower = undefined;
-    selectedTowerInfo.selectedTower = undefined;
+    selectedTowerInfo.selectedTower = TowerType.None;
 }
 
 export const mousePosition = { x: 0, y: 0 };
