@@ -1,4 +1,5 @@
 import { Direction } from "./direction";
+import { EnemyType } from "./enemies";
 import { TowerType } from "./towers";
 
 export interface PathNode {
@@ -14,7 +15,7 @@ export enum PathNodeType {
 }
 
 export interface Enemy {
-    type: number;
+    type: EnemyType;
     id: number;
     x: number;
     y: number;

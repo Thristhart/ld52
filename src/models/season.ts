@@ -5,6 +5,8 @@ export enum Season {
     Winter = 3,
 }
 
+export const timePerSeason = 150000;
+
 export function nextSeason(current: Season) {
     let next = current + 1;
     if (next > Season.Winter) {

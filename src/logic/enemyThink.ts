@@ -1,11 +1,9 @@
 import { lerp } from "~/lerp";
 import { Direction } from "~/models/direction";
+import { enemyDamage, enemySpeeds } from "~/models/enemies";
 import { Enemy, GameState, PathNodeType } from "~/models/gameStateDescription";
 import { defendPoint } from "~/models/level";
 import { pathToPoint } from "./pathfinding";
-
-const enemySpeed = 1;
-const enemyDamage = 1;
 
 export function predictEnemyLocation(enemy: Enemy | undefined, futureMilliseconds: number) {
     if (!enemy) {
@@ -19,6 +17,7 @@ export function predictEnemyLocation(enemy: Enemy | undefined, futureMillisecond
     let futureY = enemy.y;
     let remainingDuration = futureMilliseconds;
     let nextTargetIndex = path.findIndex((item) => item.type === PathNodeType.Upcoming);
+    const enemySpeed = enemySpeeds[enemy.type];
     while (remainingDuration > 0) {
         const nextTarget = path[nextTargetIndex];
         nextTargetIndex++;
@@ -53,7 +52,7 @@ export const enemyThink = async (gameState: GameState, enemy: Enemy) => {
     }
     const nextTargetIndex = path.findIndex((item) => item.type === PathNodeType.Upcoming);
     if (nextTargetIndex == -1) {
-        gameState.playerHealth -= enemyDamage;
+        gameState.playerHealth -= enemyDamage[enemy.type];
         return -1;
     }
     const nextTarget = path[nextTargetIndex];
@@ -74,6 +73,8 @@ export const enemyThink = async (gameState: GameState, enemy: Enemy) => {
             enemy.direction = Direction.Up;
         }
     }
+
+    const enemySpeed = enemySpeeds[enemy.type];
 
     if (distance < enemySpeed * 1.2) {
         path[nextTargetIndex].type = PathNodeType.Visited;

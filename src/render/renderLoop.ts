@@ -74,25 +74,27 @@ export const animationFrame = async (timestamp: number) => {
 
     context.drawImage(levelBackgrounds[state.season], 0, 0);
 
-    state.enemies.forEach((enemy) => {
-        if (enemy.path?.[0]?.type === PathNodeType.Empty) {
-            return;
-        }
-        context.strokeStyle = "black";
-        context.globalAlpha = enemy.path.findIndex((node) => node.type === PathNodeType.Upcoming) / 40;
-        context.beginPath();
-        context.moveTo(enemy.x, enemy.y);
-        for (let i = 0; i < enemy.path.length; i++) {
-            const pathNode = enemy.path[i];
-            if (pathNode.type === PathNodeType.Empty) {
-                break;
+    state.enemies
+        .sort((a, b) => a.y - b.y)
+        .forEach((enemy) => {
+            if (enemy.path?.[0]?.type === PathNodeType.Empty) {
+                return;
             }
-            if (pathNode.type === PathNodeType.Upcoming) {
-                context.lineTo(pathNode.x, pathNode.y);
+            context.strokeStyle = "black";
+            context.globalAlpha = enemy.path.findIndex((node) => node.type === PathNodeType.Upcoming) / 40;
+            context.beginPath();
+            context.moveTo(enemy.x, enemy.y);
+            for (let i = 0; i < enemy.path.length; i++) {
+                const pathNode = enemy.path[i];
+                if (pathNode.type === PathNodeType.Empty) {
+                    break;
+                }
+                if (pathNode.type === PathNodeType.Upcoming) {
+                    context.lineTo(pathNode.x, pathNode.y);
+                }
             }
-        }
-        context.stroke();
-    });
+            context.stroke();
+        });
     context.globalAlpha = 1;
 
     for (const enemy of state.enemies) {
@@ -102,23 +104,24 @@ export const animationFrame = async (timestamp: number) => {
         drawEnemy(context, enemy.x, enemy.y, enemy.type, enemy.health, timestamp, enemy.direction);
     }
 
-    // TODO: sort by y to ensure overlap is correct
-    state.towers.forEach((tower) => {
-        if (selectedTowerInfo.inspectingTower === tower.id) {
-            context.strokeStyle = "black";
-            context.strokeRect(tower.x - tileSize * 1.5, tower.y - tileSize * 1.5, tileSize * 3, tileSize * 3);
-            context.beginPath();
-            context.arc(tower.x, tower.y, towerRadiuses[tower.type], 0, Math.PI * 2);
-            context.stroke();
-        } else if (selectedTowerInfo.hoveredTower === tower.id) {
-            context.strokeStyle = "silver";
-            context.strokeRect(tower.x - tileSize * 1.5, tower.y - tileSize * 1.5, tileSize * 3, tileSize * 3);
-            context.beginPath();
-            context.arc(tower.x, tower.y, towerRadiuses[tower.type], 0, Math.PI * 2);
-            context.stroke();
-        }
-        drawTower(context, tower.x, tower.y, tower.type, tower.growthStage, timestamp);
-    });
+    state.towers
+        .sort((a, b) => a.y - b.y)
+        .forEach((tower) => {
+            if (selectedTowerInfo.inspectingTower === tower.id) {
+                context.strokeStyle = "black";
+                context.strokeRect(tower.x - tileSize * 1.5, tower.y - tileSize * 1.5, tileSize * 3, tileSize * 3);
+                context.beginPath();
+                context.arc(tower.x, tower.y, towerRadiuses[tower.type], 0, Math.PI * 2);
+                context.stroke();
+            } else if (selectedTowerInfo.hoveredTower === tower.id) {
+                context.strokeStyle = "silver";
+                context.strokeRect(tower.x - tileSize * 1.5, tower.y - tileSize * 1.5, tileSize * 3, tileSize * 3);
+                context.beginPath();
+                context.arc(tower.x, tower.y, towerRadiuses[tower.type], 0, Math.PI * 2);
+                context.stroke();
+            }
+            drawTower(context, tower.x, tower.y, tower.type, tower.growthStage, timestamp);
+        });
 
     if (isHovering && towerHoverPosition && selectedTowerInfo.selectedTower) {
         context.globalAlpha = 0.3;

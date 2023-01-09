@@ -8,7 +8,7 @@ import { Direction } from "./models/direction";
 import { enemyHealthMaxes, EnemyType } from "./models/enemies";
 import { AOEType } from "./models/gameStateDescription";
 import { spawnPoint, tileSize } from "./models/level";
-import { nextSeason } from "./models/season";
+import { nextSeason, timePerSeason } from "./models/season";
 import { grapeAOEDuration, moneyPerKill, towerCosts, TowerType } from "./models/towers";
 
 export function getGameState() {
@@ -56,12 +56,15 @@ async function tick() {
     }
 }
 
-let lastEnemyTime = 0;
+const oneSecond = 1000;
+const oneMinute = oneSecond * 60;
+
+let lastSlimeTime = 0;
+let lastGolemTime = 0;
 let lastSeasonTime = 0;
 
-const timePerSeason = 300000;
-
-let timePerEnemy = 1000;
+let timePerSlime = 1000;
+let timePerGolem = 30 * oneSecond;
 
 async function doGameLogic(timestamp: number) {
     if (gameState.playerHealth <= 0) {
@@ -135,9 +138,14 @@ async function doGameLogic(timestamp: number) {
         }
     }
 
-    if (timestamp - lastEnemyTime > timePerEnemy) {
+    if (timestamp - lastSlimeTime > timePerSlime) {
         addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
-        lastEnemyTime = timestamp;
+        lastSlimeTime = timestamp;
+    }
+
+    if (golemsEnabled && timestamp - lastGolemTime > timePerGolem) {
+        addEnemy(EnemyType.Golem, spawnPoint.x, spawnPoint.y);
+        lastGolemTime = timestamp;
     }
 
     if (timestamp - lastSeasonTime > timePerSeason) {
@@ -164,15 +172,18 @@ function addEnemy(type: EnemyType, x: number, y: number) {
     });
 }
 
-const oneSecond = 1000;
-const oneMinute = oneSecond * 60;
+let golemsEnabled = false;
 
 function progression(timestamp: number) {
     if (timestamp < oneSecond * 10) {
         return;
     }
     if (timestamp < oneMinute * 3) {
-        timePerEnemy = 1000 - (timestamp / (oneMinute * 3)) * 500;
+        timePerSlime = 1000 - (timestamp / (oneMinute * 3)) * 500;
+    }
+    // summer
+    if (timestamp > timePerSeason) {
+        golemsEnabled = true;
     }
 }
 

@@ -1,6 +1,7 @@
 import { gameWorker, lastGameState } from "~/gameWorkerWrapper";
 import { selectedTowerInfo } from "~/input";
 import { GameState } from "~/models/gameStateDescription";
+import { timePerSeason } from "~/models/season";
 import { moneyPerKill, towerCosts, TowerType } from "~/models/towers";
 
 const healthbar = document.getElementById("healthbar") as HTMLProgressElement;
@@ -15,7 +16,7 @@ export function drawUI(state: GameState) {
 
 const seasonbar = document.getElementById("seasonbar") as HTMLDivElement;
 function drawSeasonMeter(state: GameState) {
-    seasonbar.style.setProperty("--seasonProgress", `${(state.gametime / (300000 * 4)) % 1}`);
+    seasonbar.style.setProperty("--seasonProgress", `${(state.gametime / (timePerSeason * 4)) % 1}`);
 }
 
 const inspectorContent = document.getElementById("inspectorContent") as HTMLElement;
