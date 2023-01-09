@@ -26,7 +26,7 @@ export function projectileThink(gameState: GameState, projectile: Projectile, ti
             case ProjectileType.Coconut: {
                 const target = gameState.enemies.find((enemy) => enemy.id === projectile.targetId);
                 if (target) {
-                    let kill = damageEnemy(gameState, target, 25);
+                    let kill = damageEnemy(gameState, target, 60);
                     if (kill) {
                         let killer = gameState.towers.find((x) => x.id === projectile.sourceId);
                         if (killer !== undefined) {
