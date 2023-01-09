@@ -31,6 +31,16 @@ export const placeTower = (type: TowerType, gridX: number, gridY: number) => {
     }
 };
 
+export const sellTower = (towerId: number) => {
+    const tower = gameState.towers.find((tower) => tower.id === towerId);
+    if (!tower) {
+        throw `Tried to sell non-existant tower ${towerId}`;
+    }
+    const value = tower.kills * 2;
+    gameState.towers.splice(gameState.towers.indexOf(tower), 1);
+    gameState.currency += value;
+};
+
 const millisecondsPerTick = 16;
 
 let lastTickTime = performance.now();

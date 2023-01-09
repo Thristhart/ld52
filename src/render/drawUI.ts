@@ -1,4 +1,4 @@
-import { lastGameState } from "~/gameWorkerWrapper";
+import { gameWorker, lastGameState } from "~/gameWorkerWrapper";
 import { selectedTowerInfo } from "~/input";
 import { GameState } from "~/models/gameStateDescription";
 import { towerCosts, TowerType } from "~/models/towers";
@@ -32,12 +32,20 @@ function drawLeftSidebar() {
             kills.className = "kills";
             const image = document.createElement("div");
             image.className = "image";
+            const sellButton = document.createElement("button");
+            sellButton.className = "sell";
+            sellButton.addEventListener("click", () => {
+                gameWorker.sellTower(towerInfo.id);
+                selectedTowerInfo.inspectingTower = undefined;
+            });
             content.appendChild(image);
             content.appendChild(name);
             content.appendChild(kills);
+            content.appendChild(sellButton);
             inspectorContent.appendChild(content);
         }
         content.querySelector(".kills")?.setAttribute("data-kills", towerInfo.kills.toString());
+        content.querySelector(".sell")!.innerHTML = `Harvest for 💰${towerInfo.kills * 2}`;
         content.setAttribute("data-tower", towerName);
     }
 }
