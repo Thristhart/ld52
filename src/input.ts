@@ -49,6 +49,11 @@ export const selectedTowerInfo: {
 function onKeyDown(e: KeyboardEvent) {
     if (e.key === "Escape") {
         selectedTowerInfo.selectedTower = TowerType.None;
+    } else if (e.key === "s" || e.key === "h" || e.key === "S" || e.key === "H") {
+        if (selectedTowerInfo.inspectingTower !== undefined) {
+            gameWorker.sellTower(selectedTowerInfo.inspectingTower);
+            selectedTowerInfo.inspectingTower = undefined;
+        }
     }
 }
 
