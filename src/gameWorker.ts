@@ -37,7 +37,7 @@ export const sellTower = (towerId: number) => {
     if (!tower) {
         throw `Tried to sell non-existant tower ${towerId}`;
     }
-    const value = tower.kills * moneyPerKill;
+    const value = tower.kills * moneyPerKill || towerCosts[tower.type];
     gameState.towers.splice(gameState.towers.indexOf(tower), 1);
     gameState.currency += value;
 };

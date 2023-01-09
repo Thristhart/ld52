@@ -53,7 +53,9 @@ function drawLeftSidebar() {
             inspectorContent.appendChild(content);
         }
         content.querySelector(".kills")?.setAttribute("data-kills", towerInfo.kills.toString());
-        content.querySelector(".sell")!.innerHTML = `Harvest for 💰${towerInfo.kills * moneyPerKill}<br/>(or press H)`;
+        content.querySelector(".sell")!.innerHTML = `Harvest for 💰${
+            towerInfo.kills === 0 ? towerCosts[towerInfo.type] : towerInfo.kills * moneyPerKill
+        }<br/>(or press H)`;
         content.querySelector(".sell")!.setAttribute("data-towerid", towerInfo.id.toString());
         content.setAttribute("data-tower", towerName);
     }
