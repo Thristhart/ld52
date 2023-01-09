@@ -230,7 +230,7 @@ const milestones: Milestone[] = [
         once: () => {
             spawnableEnemies.add(EnemyType.BlueSlime);
             spawnableEnemies.delete(EnemyType.Slime);
-            spawnTiming[EnemyType.BlueSlime] = 350;
+            spawnTiming[EnemyType.BlueSlime] = 250;
         },
     },
     {
