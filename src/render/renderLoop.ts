@@ -2,7 +2,7 @@ import coconutProjectilePath from "~/assets/images/coconut_projectile.png";
 import hutSheetPath from "~/assets/images/defendPoint.png";
 import gameOverHousePath from "~/assets/images/game_over_house.png";
 import victoryPath from "~/assets/images/victory.png";
-import { startMusicForSeason } from "~/bgMusic";
+import { startFailureMusic, startMusicForSeason } from "~/bgMusic";
 import { getGameState } from "~/gameWorkerWrapper";
 import { isHovering, selectedTowerInfo, towerHoverPosition } from "~/input";
 import { lerp } from "~/lerp";
@@ -62,6 +62,7 @@ export const animationFrame = async (timestamp: number) => {
     context.save();
 
     if (state.playerHealth <= 0) {
+        startFailureMusic();
         context.font = "60px sans-serif";
         context.fillText("Game Over :(", 220, 200);
         context.drawImage(gameOverHouse, canvas.width / 2 - 150, canvas.height / 2 - 150, 300, 300);

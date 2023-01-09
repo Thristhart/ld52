@@ -3,6 +3,7 @@ import BGMFallPath from "./assets/music/BGMfall.mp3";
 import BGMSpringPath from "./assets/music/BGMspring.mp3";
 import BGMSummerPath from "./assets/music/BGMsummer.mp3";
 import BGMWinterPath from "./assets/music/BGMwinter.mp3";
+import FailurePath from "./assets/music/failure.mp3";
 import { Season } from "./models/season";
 
 let currentBGMusic: Howl;
@@ -15,6 +16,7 @@ let BGMFall = new Howl({ src: BGMFallPath, volume: 0.03 });
 BGMFall.loop(true);
 let BGMWinter = new Howl({ src: BGMWinterPath, volume: 0.03 });
 BGMWinter.loop(true);
+let Failure = new Howl({ src: FailurePath, volume: 0.03 });
 
 export function startMusicForSeason(season: Season) {
     switch (season) {
@@ -34,6 +36,13 @@ export function startMusicForSeason(season: Season) {
             stopCurrentMusic();
             startMusic(BGMWinter);
             break;
+    }
+}
+
+export function startFailureMusic() {
+    if (currentBGMusic != Failure) {
+        stopCurrentMusic();
+        startMusic(Failure);
     }
 }
 
