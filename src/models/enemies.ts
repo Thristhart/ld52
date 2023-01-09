@@ -13,7 +13,7 @@ export const enemyHealthMaxes = {
     [EnemyType.Golem]: 200,
     [EnemyType.BlueSlime]: 12,
     [EnemyType.KnightMounted]: 32,
-    [EnemyType.Knight]: 1000,
+    [EnemyType.Knight]: 600,
 };
 
 export const enemySpeeds = {

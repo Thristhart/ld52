@@ -64,7 +64,7 @@ const spawnTiming = {
     [EnemyType.Slime]: oneSecond,
     [EnemyType.Golem]: 30 * oneSecond,
     [EnemyType.BlueSlime]: oneSecond,
-    [EnemyType.KnightMounted]: 6 * oneSecond,
+    [EnemyType.KnightMounted]: 15 * oneSecond,
 };
 
 const lastSpawns = {
@@ -238,6 +238,7 @@ const milestones: Milestone[] = [
         isActive: (timestamp) => timestamp > timePerSeason * 3,
         once: () => {
             spawnableEnemies.add(EnemyType.KnightMounted);
+            spawnableEnemies.delete(EnemyType.Golem);
         },
     },
     {
