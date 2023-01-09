@@ -50,7 +50,7 @@ function drawSidebar() {
         const towerName = TowerType[type];
         let towerEntry = towerlist.querySelector(`[data-tower=${towerName}]`);
         if (!towerEntry) {
-            towerEntry = document.createElement("li");
+            towerEntry = document.createElement("button");
             const name = document.createElement("span");
             name.className = "name";
             const cost = document.createElement("span");
@@ -66,8 +66,13 @@ function drawSidebar() {
             });
             towerlist.appendChild(towerEntry);
         }
+        if (lastGameState && towerCosts[type] > lastGameState.currency) {
+            towerEntry.setAttribute("disabled", "true");
+        } else {
+            towerEntry.removeAttribute("disabled");
+        }
         towerEntry.setAttribute("data-tower", towerName);
-        towerEntry.setAttribute("data-cost", towerCosts[type].toString());
+        towerEntry.querySelector(".cost")?.setAttribute("data-cost", towerCosts[type].toString());
         towerEntry.setAttribute("data-selected", (selectedTowerInfo.selectedTower === type).toString());
     });
 }

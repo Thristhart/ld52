@@ -1,7 +1,7 @@
 import { gameWorker, lastGameState } from "~/gameWorkerWrapper";
 import { canvas } from "~/render/renderLoop";
 import { isTileAllowedTower, tileSize } from "./models/level";
-import { TowerType } from "./models/towers";
+import { towerCosts, TowerType } from "./models/towers";
 
 function onClick() {
     if (selectedTowerInfo.hoveredTower !== undefined) {
@@ -9,6 +9,13 @@ function onClick() {
         selectedTowerInfo.selectedTower = TowerType.None;
     } else if (towerHoverPosition) {
         gameWorker.placeTower(selectedTowerInfo.selectedTower, towerHoverPosition.x, towerHoverPosition.y);
+        if (
+            lastGameState &&
+            towerCosts[selectedTowerInfo.selectedTower] >
+                lastGameState.currency - towerCosts[selectedTowerInfo.selectedTower]
+        ) {
+            selectedTowerInfo.selectedTower = TowerType.None;
+        }
     } else {
         selectedTowerInfo.selectedTower = TowerType.None;
         selectedTowerInfo.inspectingTower = undefined;
