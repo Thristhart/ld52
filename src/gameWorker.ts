@@ -59,12 +59,30 @@ async function tick() {
 const oneSecond = 1000;
 const oneMinute = oneSecond * 60;
 
-let lastSlimeTime = 0;
-let lastGolemTime = 0;
+const spawnTiming = {
+    [EnemyType.None]: 0,
+    [EnemyType.Slime]: 1000,
+    [EnemyType.Golem]: 30 * oneSecond,
+};
+
+const lastSpawns = {
+    [EnemyType.None]: 0,
+    [EnemyType.Slime]: 0,
+    [EnemyType.Golem]: 0,
+};
+
+const spawnableEnemies = new Set<keyof typeof lastSpawns>();
+
 let lastSeasonTime = 0;
 
-let timePerSlime = 1000;
-let timePerGolem = 30 * oneSecond;
+function spawnEnemies(timestamp: number) {
+    for (const type of spawnableEnemies) {
+        if (timestamp - lastSpawns[type] > spawnTiming[type]) {
+            addEnemy(type, spawnPoint.x, spawnPoint.y);
+            lastSpawns[type] = timestamp;
+        }
+    }
+}
 
 async function doGameLogic(timestamp: number) {
     if (gameState.playerHealth <= 0) {
@@ -72,6 +90,9 @@ async function doGameLogic(timestamp: number) {
     }
     towerQuadtree.clear();
     enemyQuadtree.clear();
+
+    spawnEnemies(timestamp);
+
     for (let i = 0; i < gameState.enemies.length; i++) {
         const enemy = gameState.enemies[i];
         if (!enemy.type) {
@@ -139,16 +160,6 @@ async function doGameLogic(timestamp: number) {
         }
     }
 
-    if (timestamp - lastSlimeTime > timePerSlime) {
-        addEnemy(EnemyType.Slime, spawnPoint.x, spawnPoint.y);
-        lastSlimeTime = timestamp;
-    }
-
-    if (golemsEnabled && timestamp - lastGolemTime > timePerGolem) {
-        addEnemy(EnemyType.Golem, spawnPoint.x, spawnPoint.y);
-        lastGolemTime = timestamp;
-    }
-
     if (timestamp - lastSeasonTime > timePerSeason) {
         gameState.season = nextSeason(gameState.season);
         lastSeasonTime = timestamp;
@@ -173,23 +184,23 @@ function addEnemy(type: EnemyType, x: number, y: number) {
     });
 }
 
-let golemsEnabled = false;
-
 function progression(timestamp: number) {
+    if (timestamp > oneSecond * 5) {
+        spawnableEnemies.add(EnemyType.Slime);
+    }
     if (timestamp < oneSecond * 10) {
         return;
     }
     if (timestamp < oneMinute * 3) {
-        timePerSlime = 1000 - (timestamp / (oneMinute * 3)) * 500;
+        spawnTiming[EnemyType.Slime] = 1000 - (timestamp / (oneMinute * 3)) * 500;
     }
     // summer
     if (timestamp > timePerSeason) {
-        golemsEnabled = true;
+        spawnableEnemies.add(EnemyType.Golem);
     }
     if (timestamp > timePerSeason && timestamp <= timePerSeason * 2) {
-        timePerGolem =
+        spawnTiming[EnemyType.Golem] =
             30 * oneSecond - (20 * oneSecond * Math.min(timestamp - timePerSeason, timePerSeason)) / timePerSeason;
-        console.log(timePerGolem);
     }
 }
 
