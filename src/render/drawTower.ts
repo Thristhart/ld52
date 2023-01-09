@@ -2,7 +2,7 @@ import coconutSheetPath from "~/assets/images/coconut_no_shadow.png";
 import cornSheetPath from "~/assets/images/corn.png";
 import grapeSheetPath from "~/assets/images/grapes.png";
 import { tileSize } from "~/models/level";
-import { TowerType } from "~/models/towers";
+import { towerCosts, TowerType } from "~/models/towers";
 import { drawSprite, SpriteSheet } from "./drawSprite";
 import { loadImage } from "./loadImage";
 
@@ -39,20 +39,35 @@ export function drawTower(
     y: number,
     towerType: TowerType,
     growthStage: number,
-    _timestamp: number
+    kills: number
 ) {
+    if (kills > towerCosts[towerType]) {
+        context.lineWidth = Math.min((kills / (towerCosts[towerType] * 4)) * 5, 5);
+
+        context.strokeStyle = "gold";
+        context.beginPath();
+        context.ellipse(x, y + tileSize, tileSize, tileSize / 2, 0, 0, Math.PI * 2);
+        context.stroke();
+    }
+    context.lineWidth = 1;
     switch (towerType) {
-        case TowerType.Corn:
-            return drawSprite(context, cornSheet, x, y - tileSize / 2, getCornGrowthFrame(growthStage));
-        case TowerType.Grape:
-            return drawSprite(context, grapeSheet, x, y - tileSize / 2, getGrapeGrowthFrame(growthStage));
-        case TowerType.Coconut:
-            return drawSprite(
+        case TowerType.Corn: {
+            drawSprite(context, cornSheet, x, y - tileSize / 2, getCornGrowthFrame(growthStage));
+            break;
+        }
+        case TowerType.Grape: {
+            drawSprite(context, grapeSheet, x, y - tileSize / 2, getGrapeGrowthFrame(growthStage));
+            break;
+        }
+        case TowerType.Coconut: {
+            drawSprite(
                 context,
                 coconutSheet,
                 x,
                 y - tileSize / 2 - coconutSheet.spriteHeight / 4,
                 getCoconutGrowthFrame(growthStage)
             );
+            break;
+        }
     }
 }

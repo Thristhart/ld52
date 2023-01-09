@@ -135,7 +135,7 @@ export const animationFrame = async (timestamp: number) => {
                 context.arc(tower.x, tower.y, towerRadiuses[tower.type], 0, Math.PI * 2);
                 context.stroke();
             }
-            drawTower(context, tower.x, tower.y, tower.type, tower.growthStage, timestamp);
+            drawTower(context, tower.x, tower.y, tower.type, tower.growthStage, tower.kills);
         });
 
     if (isHovering && towerHoverPosition && selectedTowerInfo.selectedTower) {
@@ -153,7 +153,7 @@ export const animationFrame = async (timestamp: number) => {
             towerHoverPosition.y * tileSize + tileSize / 2,
             selectedTowerInfo.selectedTower,
             5,
-            timestamp
+            0
         );
         context.beginPath();
         context.arc(
