@@ -1,6 +1,7 @@
 import coconutProjectilePath from "~/assets/images/coconut_projectile.png";
 import hutSheetPath from "~/assets/images/defendPoint.png";
 import gameOverHousePath from "~/assets/images/game_over_house.png";
+import victoryPath from "~/assets/images/victory.png";
 import { startMusicForSeason } from "~/bgMusic";
 import { getGameState } from "~/gameWorkerWrapper";
 import { isHovering, selectedTowerInfo, towerHoverPosition } from "~/input";
@@ -31,6 +32,7 @@ const hutSheet: SpriteSheet = {
 };
 
 const gameOverHouse = loadImage(gameOverHousePath);
+const victory = loadImage(victoryPath);
 
 const coconutProjectileImage = loadImage(coconutProjectilePath);
 
@@ -64,6 +66,14 @@ export const animationFrame = async (timestamp: number) => {
         context.fillText("Game Over :(", 220, 200);
         context.drawImage(gameOverHouse, canvas.width / 2 - 150, canvas.height / 2 - 150, 300, 300);
         context.fillText("Click to try again", 160, 620);
+        return;
+    }
+
+    if (state.hasWon) {
+        context.font = "42px sans-serif";
+        context.drawImage(victory, 0, 0, canvas.width, canvas.height);
+        context.fillText("You made it through the year!", 140, canvas.height - 16);
+        drawUI(state);
         return;
     }
 

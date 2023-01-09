@@ -89,7 +89,7 @@ function spawnEnemies(timestamp: number) {
 }
 
 async function doGameLogic(timestamp: number) {
-    if (gameState.playerHealth <= 0) {
+    if (gameState.playerHealth <= 0 || gameState.hasWon) {
         return;
     }
     towerQuadtree.clear();
@@ -238,6 +238,14 @@ const milestones: Milestone[] = [
         isActive: (timestamp) => timestamp > timePerSeason * 3,
         once: () => {
             spawnableEnemies.add(EnemyType.KnightMounted);
+        },
+    },
+    {
+        // after winter
+        isActive: (timestamp) => timestamp > timePerSeason * 4,
+        once: () => {
+            gameState.hasWon = true;
+            gameState.season = 0;
         },
     },
 ];

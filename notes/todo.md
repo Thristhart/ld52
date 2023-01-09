@@ -16,7 +16,7 @@ TODO:
 -   "Start Game" screen
     -   A name for the game
 -   Enemies need healthbars X
--   "Game Over" screen
+-   "Game Over" screen X
 -   Cancel placement button. (Escape works for me but I don't think it's clear)
 
 # Balance

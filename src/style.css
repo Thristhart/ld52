@@ -57,6 +57,7 @@ body[data-season="3"] {
 }
 #leftSidebar {
     grid-area: leftSidebar;
+    padding: 1rem;
 }
 #towerlist {
     padding: 1rem;

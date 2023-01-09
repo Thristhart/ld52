@@ -60,6 +60,7 @@ export interface AOE {
 export interface GameState {
     gametime: number;
     season: number;
+    hasWon: boolean;
     playerHealth: number;
     currency: number;
     enemies: Enemy[];
