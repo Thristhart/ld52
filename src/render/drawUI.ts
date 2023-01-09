@@ -1,3 +1,4 @@
+import { lastGameState } from "~/gameWorkerWrapper";
 import { selectedTowerInfo } from "~/input";
 import { GameState } from "~/models/gameStateDescription";
 import { towerCosts, TowerType } from "~/models/towers";
@@ -7,7 +8,38 @@ const healthbar = document.getElementById("healthbar") as HTMLProgressElement;
 export function drawUI(state: GameState) {
     healthbar.value = state.playerHealth;
     document.body.dataset.season = state.season.toString();
+    drawLeftSidebar();
     drawSidebar();
+}
+
+const inspectorContent = document.getElementById("inspectorContent") as HTMLElement;
+function drawLeftSidebar() {
+    if (selectedTowerInfo.inspectingTower === undefined) {
+        inspectorContent.innerHTML = "";
+    } else {
+        const towerInfo = lastGameState?.towers.find((tower) => tower.id === selectedTowerInfo.inspectingTower);
+        if (!towerInfo) {
+            return;
+        }
+        const towerName = TowerType[towerInfo.type];
+
+        let content = inspectorContent.querySelector("section");
+        if (!content) {
+            content = document.createElement("section");
+            const name = document.createElement("span");
+            name.className = "name";
+            const kills = document.createElement("span");
+            kills.className = "kills";
+            const image = document.createElement("div");
+            image.className = "image";
+            content.appendChild(image);
+            content.appendChild(name);
+            content.appendChild(kills);
+            inspectorContent.appendChild(content);
+        }
+        content.querySelector(".kills")?.setAttribute("data-kills", (20).toString());
+        content.setAttribute("data-tower", towerName);
+    }
 }
 
 const availableTowers = [TowerType.Corn, TowerType.Grape];
@@ -30,6 +62,7 @@ function drawSidebar() {
             towerEntry.appendChild(cost);
             towerEntry.addEventListener("click", () => {
                 selectedTowerInfo.selectedTower = type;
+                selectedTowerInfo.inspectingTower = undefined;
             });
             towerlist.appendChild(towerEntry);
         }

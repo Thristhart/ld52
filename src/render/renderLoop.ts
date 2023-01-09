@@ -90,8 +90,11 @@ export const animationFrame = async (timestamp: number) => {
 
     // TODO: sort by y to ensure overlap is correct
     state.towers.forEach((tower) => {
-        context.strokeStyle = "silver";
-        if (selectedTowerInfo.hoveredTower === tower.id) {
+        if (selectedTowerInfo.inspectingTower === tower.id) {
+            context.strokeStyle = "black";
+            context.strokeRect(tower.x - tileSize, tower.y - tileSize, tileSize * 3, tileSize * 3);
+        } else if (selectedTowerInfo.hoveredTower === tower.id) {
+            context.strokeStyle = "silver";
             context.strokeRect(tower.x - tileSize, tower.y - tileSize, tileSize * 3, tileSize * 3);
         }
         drawTower(context, tower.x, tower.y, tower.type, tower.growthStage, timestamp);

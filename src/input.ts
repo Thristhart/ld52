@@ -4,10 +4,14 @@ import { isTileAllowedTower, tileSize } from "./models/level";
 import { TowerType } from "./models/towers";
 
 function onClick() {
-    if (selectedTowerInfo.hoveredTower) {
+    if (selectedTowerInfo.hoveredTower !== undefined) {
         selectedTowerInfo.inspectingTower = selectedTowerInfo.hoveredTower;
+        selectedTowerInfo.selectedTower = TowerType.None;
     } else if (towerHoverPosition) {
         gameWorker.placeTower(selectedTowerInfo.selectedTower, towerHoverPosition.x, towerHoverPosition.y);
+    } else {
+        selectedTowerInfo.selectedTower = TowerType.None;
+        selectedTowerInfo.inspectingTower = undefined;
     }
 }
 
