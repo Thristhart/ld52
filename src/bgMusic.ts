@@ -9,16 +9,16 @@ import { Season } from "./models/season";
 
 let currentBGMusic: Howl;
 
-let BGMSpring = new Howl({ src: BGMSpringPath, volume: 0.03 });
+let BGMSpring = new Howl({ src: BGMSpringPath, volume: 0.1 });
 BGMSpring.loop(true);
-let BGMSummer = new Howl({ src: BGMSummerPath, volume: 0.03 });
+let BGMSummer = new Howl({ src: BGMSummerPath, volume: 0.1 });
 BGMSummer.loop(true);
-let BGMFall = new Howl({ src: BGMFallPath, volume: 0.03 });
+let BGMFall = new Howl({ src: BGMFallPath, volume: 0.1 });
 BGMFall.loop(true);
-let BGMWinter = new Howl({ src: BGMWinterPath, volume: 0.03 });
+let BGMWinter = new Howl({ src: BGMWinterPath, volume: 0.1 });
 BGMWinter.loop(true);
-let Failure = new Howl({ src: FailurePath, volume: 0.03 });
-let Victory = new Howl({ src: VictoryPath, volume: 0.03 });
+let Failure = new Howl({ src: FailurePath, volume: 0.1 });
+let Victory = new Howl({ src: VictoryPath, volume: 0.1 });
 
 export function startMusicForSeason(season: Season) {
     switch (season) {
